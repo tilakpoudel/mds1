@@ -1,2 +1,8 @@
 .ipynb_checkpoints/
 .ipynb_checkpoints
+
+# Ignore executables inside subdirectories (like `dsa/`)
+dsa/*
+# Keep only C source files in tracking
+!dsa/*.c
+
