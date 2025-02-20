@@ -13,10 +13,10 @@ Practice topics in mds first sem
     -
     Teacher: Shital Bhandari
 
-4. Maths for data science
+4. Mathematics for data science (MDS 504)
     - 
     Teacher: Prof. Dr. PM Bajracharya
 
-5. Database Management System
+5. Database Management System (MDS 505)
     -
     Teacher: Sarbin Sayami
