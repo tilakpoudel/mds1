@@ -1,3 +1,11 @@
+/**
+     Program to check bracket pair match
+    Input: (a+b) - (d-e)
+    Output: Balanced
+
+    Input: (a+b) - (d-e))
+    Output: Not Balanced
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
