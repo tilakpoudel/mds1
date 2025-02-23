@@ -65,7 +65,7 @@ df = pd.get_dummies(df, columns=['categorical_column'], drop_first=True)
 ## **✅ Step 3: Exploratory Data Analysis (EDA)**
 ### 3.1 Generate Automated Report
 ```
-from pandas_profiling import ProfileReport  
+from ydata_profiling import ProfileReport
 profile = ProfileReport(df, explorative=True)  
 profile.to_file("EDA_Report.html") 
 ``` 
