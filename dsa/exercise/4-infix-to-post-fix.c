@@ -135,4 +135,10 @@ int main() {
 
     Enter an infix expression: (a+b)-c^d
     Postfix Expression: ab+cd^-
+
+    Enter an infix expression: a-b*(c+d)*e
+    Postfix Expression: abcd+*e*-
+
+    Enter an infix expression: k+l-m*n+(o^p)*w/u/v*t+q
+    Postfix Expression: kl+mn*-op^w*u/v/t*+q+
 */
