@@ -1,3 +1,6 @@
+/*
+	2.Write a program to implement Stack using array data structure.
+*/
 #include<stdio.h>
 #include<stdlib.h>
 
@@ -66,15 +69,19 @@ int main()
 				printf("Enter element to push:");
 				scanf("%d", & elem);
 				push(elem);
+				
 				break;
 			case 2:
 				pop();
+				
 				break;
 			case 3:
 				peek();
+				
 				break;
 			case 4:
 				system("clear");
+				
 				break;
 			case 5:
 				exit(0);
