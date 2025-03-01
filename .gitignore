@@ -1,8 +1,14 @@
 .ipynb_checkpoints/
 .ipynb_checkpoints
 
-# Ignore executables inside subdirectories (like `dsa/`)
-dsa/*
-# Keep only C source files in tracking
-!dsa/*.c
+# Ignore files without an extension inside dsa/ and its subdirectories
+dsa/**/[!.]*
 
+# Allow directories inside dsa/
+!dsa/**/
+
+# Allow C source files explicitly
+!dsa/**/*.c
+
+# Allow pdf source files explicitly
+!dsa/**/*.pdf
