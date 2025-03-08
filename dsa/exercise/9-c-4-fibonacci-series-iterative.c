@@ -1,7 +1,7 @@
 /**
  * Program to find fibonacci series up to nth term iterative approach
  * 
- * ✅ Efficient: This approach runs in O(n) time complexity and does not require extra memory.
+ * Efficient: This approach runs in O(n) time complexity and does not require extra memory.
  */
 
  #include <stdio.h>
