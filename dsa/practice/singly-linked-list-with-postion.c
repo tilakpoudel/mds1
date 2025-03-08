@@ -16,6 +16,7 @@ struct node* list = NULL;
 
 void insertnode(int pos, int val) 
 {
+    // TODO: [TP: 2025-03-08] Count the number of nodes inserted and check before operation(deletion)
 	struct node* ins = (struct node*) malloc(sizeof(struct node));
 	ins->info = val;
 	ins->next = NULL;
