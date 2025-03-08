@@ -6,8 +6,8 @@
     Memoization is an optimization technique that stores previously computed results to avoid redundant calculations. 
     It is a form of caching used in recursive functions.
 
-    ✅ Time Complexity: O(n)
-    ✅ Space Complexity: O(n)
+    - Time Complexity: O(n)
+    - Space Complexity: O(n)
 */
 
 #include <stdio.h>
