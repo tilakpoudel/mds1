@@ -25,6 +25,7 @@ void push(Stack *stack, char ch) {
         
         return;
     }
+    
     stack->arr[++stack->top] = ch;
 }
 
