@@ -1,0 +1,497 @@
+---
+title: "39_Project1"
+author: "Tilak Poudel"
+date: "2025-03-09"
+output: html_document
+---
+
+## Session 1 & 2
+
+Example_1
+Column vector
+```{r}
+data<-c(1,2,3,4,5,6,7,8,9)
+data
+text<-c("a","b","c","d","e","f","g","h","i")
+text
+data2<-cbind(data,text)
+data2
+```
+
+Example_2
+
+Matrix contains in 2 dimensions in table like structure
+```{r}
+M<-matrix(
+  c(1:9), nrow = 3, ncol = 3, byrow = TRUE
+)
+print(M)
+```
+
+Example_3
+```{r}
+V<-c(1:12)
+MDA<-array(V,dim = c(2,3,2))
+print(MDA)
+```
+
+## Data frames in R
+### Creating data frame in R.
+
+```{r}
+df <- data.frame(x=c(1,2,3), y=c(10,20,30), z=c(30,45,50))
+df
+
+class(df)
+```
+
+Create a data frame
+
+```{r}
+emp.data <- data.frame(
+  emp_id = c(1:5),
+  emp_name =c("Rick", "Dan", "Michelle", "Ryan", "Gary"),
+  salary = c(623.3, 515.2, 611.0, 729.0, 845.25),
+  start_date = as.Date(c("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11", "2015-03-27")),
+  stringsAsFactors = FALSE
+)
+
+# print the data
+print(emp.data)
+
+# Get the structure of the data frame.
+str(emp.data)
+
+# Print the summary
+print(summary(emp.data))
+
+# Extract part of data from data frame
+# Extract emp_name and salary
+result <- data.frame(emp.data$emp_name, emp.data$salary)
+print(result)
+
+# Extract first two rows
+result1 <- emp.data[1:2, ]
+print(result1)
+
+# Extract 3rd and 5th row with 2nd and 4th column
+result <- emp.data[c(3,5), c(2,4)]
+print(result)
+
+# Add new column in existing data frame
+# Add "dept" column
+emp.data$dept <- c("IT", "HR", "Finance", "Operations", "IT")
+v <- emp.data
+
+print(v)
+
+# Expand data frame in R (Adding cases)
+# Create a new data frame
+emp.newdata <- data.frame(
+  emp_id = c(6:8),
+  emp_name =c("Ram", "Shyam", "Mohan"),
+  salary = c(923.3, 715.2, 681.0),
+  start_date = as.Date(c("2014-01-01", "2013-07-20", "2014-11-25")),
+  dept = c("HR", "IT", "Finance"),
+  stringsAsFactors = FALSE
+)
+
+print(emp.newdata)
+
+# Expand(Combine) data frame using rbind 
+# Bind the tow data frames
+emp.finaldata <- rbind(emp.data, emp.newdata)
+print(emp.finaldata)
+```
+
+## Import data in R
+```{r}
+
+# load necessary libraries
+library(magrittr)
+
+# Read csv file
+covid_nep_data = read.csv('../data/covnep_252days.csv')
+
+print(str(covid_nep_data))
+
+print(head(covid_nep_data))
+
+print(summary(covid_nep_data))
+```
+Importing COVID data in Text Files
+```{r}
+y<-read.csv("../data/covnep_252days.csv")
+head(y)
+```
+Importing data into Excel files
+```{r}
+library(readxl)
+covid_data_xls <- readxl::read_excel("../data/covnep_252days.xlsx")
+tail(covid_data_xls)
+```
+
+## Session 3
+### Basics of R
+#### PEMDAS Rule in R
+```{r}
+s<-(4+6)^2*5/10+9-1
+print(s)
+```
+
+#### Data types in R
+
+1) Integer data type
+```{r}
+x<-c(1,2,3,4,5,6,7,8,9)
+class(x)
+```
+
+```{r}
+y<-c(1L,2L,3L,4L,5L,6L,7L,8L,9L)
+print(y)
+class(y)
+```
+
+R promotes integer to numeric when needed
+
+(Multiplying integer by numeric)
+```{r}
+z<-4L*2.8
+print(z)
+```
+
+Dividing integer by integer will give numeric
+```{r}
+b<-5L/2L
+print(b)
+```
+
+Data_Types_In_R
+1) Character
+```{r}
+x<-"data"
+print(x)
+class(x)
+```
+
+2)Factor
+```{r}
+y<-factor("data")
+print(y)
+class(y)
+```
+Factor and attributes in R
+```{r}
+gender<-factor(c("male","female","female","male"))
+typeof(gender)
+attributes(gender)
+```
+
+```{r}
+unclass(gender)
+```
+Data_Types
+
+Date: To store Date
+```{r}
+date1<-as.Date("2025-03-09")
+date1
+```
+
+```{r}
+class(date1)
+```
+POSIXct:To store date and time
+
+```{r}
+date2<-as.POSIXct("2025-03-09 12:57")
+date2
+```
+
+```{r}
+class(date2)
+
+```
+Logical_Data_Types
+
+```{r}
+x<- 2 == 3
+x
+```
+
+```{r}
+2!=3
+```
+
+```{r}
+2<3
+```
+
+```{r}
+2<=3
+```
+
+```{r}
+2>3
+```
+
+```{r}
+2>=3
+```
+
+```{r}
+"data" == "stats"
+```
+
+```{r}
+"data" < "stats"
+```
+
+```{r}
+"hari" == "hare"
+```
+#### Vector operation in R(multiplication by a scalar)
+```{r}
+x1<-c(1,2,3,4,5,6,7,8,9)
+y<-x1*3
+y
+```
+Addition with Scalar
+```{r}
+z<-x1+2
+z
+```
+Subtraction With Scalar
+```{r}
+d<-x1-2
+d
+```
+Square root 
+```{r}
+e<-sqrt(x1)
+e
+```
+Extending vector operation in R
+(Two vectors of equal length)
+```{r}
+x<-1:10
+y<- -5:4
+length(x)
+```
+
+```{r}
+length(y)
+```
+Addition
+```{r}
+x+y
+```
+Subtraction
+```{r}
+x-y
+```
+Multiplication
+```{r}
+x*y
+```
+Division
+
+```{r}
+x/y
+```
+Power
+```{r}
+x^y
+```
+Addition of both length
+```{r}
+length(x+y)
+```
+Two vector of unequal length
+(Addition)
+```{r}
+x<-1:10
+z<-c(1,2)
+x+z
+```
+Accessing individual elements in R
+
+```{r}
+x[1]
+```
+
+```{r}
+x[c(1,4)]
+```
+Creation and giving name to a Vector
+```{r}
+w1<-1:3
+names(w1)<-c("a", "b", "c")
+w1
+```
+
+#### Missing data in R (NA Type)
+```{r}
+zchar<-c("Hockey", NA, "Cricket")
+is.na(zchar)
+```
+
+```{r}
+nchar(zchar)
+```
+Calculating mean of missing Data
+```{r}
+z<-c(1,2,NA,8,3,NA,3)
+mean(z)
+```
+Removing NA and  calculating mean
+```{r}
+mean(z, na.rm = TRUE)
+```
+Calculating variance excluding NA 
+```{r}
+var(z, na.rm = TRUE)
+```
+NULL type missing in R
+```{r}
+z<-c(1, NULL, 3)
+z
+```
+
+```{r}
+is.null(z)
+```
+
+```{r}
+f<-NULL
+is.null(f)
+```
+
+#### Pipes in R
+```{r}
+x<-1:10
+mean(x)
+```
+With pipe operator(%>%)
+```{r}
+library(magrittr)
+x%>%mean
+```
+
+```{r}
+z<-c(1,2,NA,8,3,NA,3)
+sum(is.na(z))
+```
+Pipes without nesting 
+```{r}
+z %>% is.na %>% sum
+```
+Additional argument
+
+```{r}
+z %>% mean(na.rm = TRUE)
+```
+
+### Advanced Data Structure In R
+(Data Frame)
+
+```{r}
+x<-10:1
+y<- -4:5
+q<-c("Hockey","Football","Baseball","Kabaddi","Rugby","Pingpong","Basketball","Tennis","Cricket","Volleyball")
+sportsDF<-data.frame(x,y,q)
+sportsDF
+
+```
+
+Naming data frame
+```{r}
+sportsDF<-data.frame(First =x, Second = y, Sport = q)
+sportsDF
+```
+Accessing column
+```{r}
+names(sportsDF)[3]
+```
+
+```{r}
+rownames(sportsDF)
+```
+
+```{r}
+rownames(sportsDF)<-c("One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten")
+sportsDF
+```
+Printing first few Rows
+```{r}
+head(sportsDF)
+```
+
+Printing last few rows
+```{r}
+tail(sportsDF)
+```
+Printing first seven rows
+```{r}
+head(sportsDF, n =7)
+```
+Accessing value from third row and second column
+```{r}
+sportsDF[3,2]
+```
+Accessing from Third column
+
+```{r}
+sportsDF[,3]
+```
+
+```{r}
+sportsDF[,c("First","Sport")]
+```
+
+```{r}
+sportsDF[,"Sport",drop = FALSE]
+```
+#### Lists in R
+```{r}
+list1<-list(1,2,3)
+list1
+```
+Single element list
+```{r}
+list2<-list(c(1,2,3))
+list2
+```
+
+```{r}
+list3<-list(c(1,2,3),3:7)
+list3
+```
+List with data frame and vector
+```{r}
+list4<-list(sportsDF,1:10)
+list4
+```
+
+```{r}
+list5<-list(sportsDF,1:10,list3)
+list5
+```
+
+```{r}
+names(list5)
+```
+
+```{r}
+names(list5)<-c("dataframe","vector","list")
+list5
+```
+Accessing elements of list
+```{r}
+list5[[1]]
+```
+
+```{r}
+list5[["dataframe"]]
+```
