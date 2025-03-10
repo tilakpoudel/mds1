@@ -247,7 +247,7 @@ x
 ```{r}
 "data" < "stats"
 ```
-
+The number of characters are euqal so true.
 ```{r}
 "hari" == "hare"
 ```
@@ -482,16 +482,17 @@ list5
 ```{r}
 names(list5)
 ```
-
+Naming the first as data frame , second as vector and the third as list
 ```{r}
 names(list5)<-c("dataframe","vector","list")
 list5
 ```
 Accessing elements of list
+It returns the first element i.e data frame
 ```{r}
 list5[[1]]
 ```
-
+Alternativley, we can access by its name as well
 ```{r}
 list5[["dataframe"]]
 ```
