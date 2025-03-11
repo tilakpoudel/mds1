@@ -543,6 +543,7 @@ x <- c(1:30)
 y <- x^3
 plot(x,y)
 ```
+
 The graph for the plot is exponential.
 
 R script examples
@@ -562,9 +563,6 @@ sink("result.out")
 # load the data set from the folder
 iris <- read.csv("data/iris-data.csv")
 colnames(iris)
-
-# Do the analysis
-plot(iris)
 
 # result will appear in the output file
 summary(iris)
@@ -636,7 +634,7 @@ head(iris_data)  # it has extra column for row name
 # Convert the wide format data into long format
 library(reshape2)
 
-# Convert iris data set to long format
+# Convert iris data set to long format using the melt function
 iris_long <- melt(iris, 
                   id.vars = "Species", 
                   variable.name = "Measurement", 
@@ -745,7 +743,7 @@ roll()
 roll()
 roll()
 
-# function with default parameter
+# Function with default value
 roll2 <- function(die = 1:6) {
   # size = 2 => it means 2 dices are rolled
   dice <- sample(die, size = 2, replace=TRUE)
@@ -867,6 +865,7 @@ vapply(df, length, FUN.VALUE = integer(1))
 ```
 
 ## Conditions
+Example of usage of if, else if and else statement
 ```{r}
 age <- 1:99
 
@@ -920,6 +919,7 @@ check_age12(70)
 ```
 
 ### Creating binary values
+Here we split the data to Too low  or Too high or TRUE or FALSE based on the value of y.
 ```{r}
 y <- 1:40
 ifelse(y<20, "Too low", "Too high")
