@@ -163,8 +163,23 @@ hist(delays$delay)
 # Still the graph is left skewed, a bit better than before
 
 # Q. Find the popular destinations?
-head(popular_dests$dest)
+# head(popular_dests$dest)
+# Group data by destination with number of flights
+# Sort the data by number of flights in desc
+# The top most row is the popular destination
+str(flights)
+number_of_flights <- flights %>%
+  group_by(dest) %>%
+  dplyr::summarise(
+    count = n(),
+  )
 
+head(number_of_flights)
+
+# now sort the data in desc order by count
+top_destinations <- arrange(number_of_flights, desc(number_of_flights))
+head(top_destinations)
+tail(top_destinations)
 
 # 10. slice function
 # Random sampling
