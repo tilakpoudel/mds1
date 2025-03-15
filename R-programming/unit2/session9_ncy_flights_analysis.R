@@ -6,11 +6,11 @@ library(dplyr)
 head(flights)
 str(flights)
 
-# dplyr 5 important fuctions
+# dplyr 5 important functions
 #1. filter
 jan1 <- dplyr::filter(flights, month == 1, day == 1)
 print(jan1)
-(jan1 <- dplyr::filter(flights == 1, day == 1)) # save as an object
+(jan1 <- dplyr::filter(flights, month== 1, day == 1)) # save as an object
 
 dec25 <- dplyr::filter(flights, month == 12, day == 25)
 dec25 <- dplyr::filter(flights, month == 12, day == 25)
