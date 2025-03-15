@@ -18,11 +18,10 @@ void insertnode(struct node* pred, int val)
     ins->info = val;
     ins->next = NULL;
 
-    if(pred == NULL)
+    if (pred == NULL)
     {
         ins->next = list;
         list = ins;
-       
     }
     else
     {
@@ -33,7 +32,7 @@ void insertnode(struct node* pred, int val)
 }
 void deletenode(struct node* del)
 {
-    if(del == list)
+    if (del == list)
     {
         list = del->next;
 
@@ -57,12 +56,11 @@ void display()
 {
 
     struct node* temp = list;
+    
     while(temp != NULL)
     {
-
-    printf("%d\t", temp->info);
-    temp = temp->next;
-
+        printf("%d\t", temp->info);
+        temp = temp->next;
     }
     
     printf("\n");
@@ -70,12 +68,10 @@ void display()
 
 int main()
 {
-
     insertnode(NULL, 7);
     insertnode(list, 10);
     insertnode(list, 16);
     display();
     deletenode(list->next);
     display();
-
 }
