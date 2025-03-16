@@ -1,4 +1,8 @@
 # Load necessary libraries
+install.packages("RSelenium")
+install.packages("wdman")
+install.packages("netstat")
+
 suppressWarnings({
   library(RSelenium)
   library(rvest)
@@ -6,12 +10,28 @@ suppressWarnings({
   library(jsonlite)
 })
 
+library(wdman)
+chrome_driver <- chromedriver()
+
 # Start Selenium server and browser
-browserDriver <- rsDriver(browser = "firefox", verbose = FALSE, port = free_port())
+# browserDriver <- rsDriver(browser = "firefox", verbose = FALSE, port = free_port())
 # verbose = FALSE: Hides unnecessary output logs.
 # port = free_port(): Finds an available port automatically using netstat::free_port() (avoids port conflicts).
 
-remDr <- browserDriver[["client"]] #browser client that interact and navigate with the website
+# remDr <- browserDriver[["client"]] #browser client that interact and navigate with the website
+
+# port <- free_port()
+# 
+# rD <- rsDriver(
+#   browser = "chrome",
+#   port = port,
+#   verbose = FALSE,
+#   chromever = "134.0.6998.35"
+# )
+# remDr <- rD$client
+
+rD <- rsDriver(browser = "firefox", verbose = FALSE)
+remDr <- rD$client  # This connects to the browser
 
 # Navigate to the target website
 remDr$navigate("https://aqicn.org/forecast/kathmandu/")
