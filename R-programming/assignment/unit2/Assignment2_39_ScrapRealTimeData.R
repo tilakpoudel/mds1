@@ -1,78 +1,222 @@
 # Load necessary libraries
-install.packages("RSelenium")
-install.packages("wdman")
-install.packages("netstat")
-
 suppressWarnings({
   library(RSelenium)
   library(rvest)
-  library(netstat)
   library(jsonlite)
 })
 
-library(wdman)
-chrome_driver <- chromedriver()
+# .........fire fox set up--------------
 
-# Start Selenium server and browser
-# browserDriver <- rsDriver(browser = "firefox", verbose = FALSE, port = free_port())
-# verbose = FALSE: Hides unnecessary output logs.
-# port = free_port(): Finds an available port automatically using netstat::free_port() (avoids port conflicts).
+library(RSelenium)
 
-# remDr <- browserDriver[["client"]] #browser client that interact and navigate with the website
+# Create a remote driver object with more defined capabilities
+remDr <- remoteDriver(
+  remoteServerAddr = "172.18.0.2",   # Ensure this is correct (use container IP if necessary)
+  port = 4444L,
+  browserName = "firefox",          # Ensure 'firefox' is specified as the browser
+  extraCapabilities = list(
+    "moz:firefoxOptions" = list(
+      args = list("--headless")     # If you want headless mode, keep this, else remove it
+    )
+  )
+)
 
-# port <- free_port()
-# 
-# rD <- rsDriver(
-#   browser = "chrome",
-#   port = port,
-#   verbose = FALSE,
-#   chromever = "134.0.6998.35"
+# Open the browser
+remDr$open()
+
+# Navigate to a website
+url <- "https://www.google.com"
+remDr$navigate(url)
+
+# Wait for the page to load
+Sys.sleep(3)
+
+# Get the title of the page
+page_title <- remDr$getTitle()
+print(page_title)
+
+# Extract the page source (for further scraping)
+page_source <- remDr$getPageSource()
+print(page_source)
+
+# Close the browser and the Selenium server
+remDr$close()
+
+
+
+# ............ chrome setup ...............
+
+library(RSelenium)
+
+# Define Chrome capabilities
+chrome_capabilities <- list(
+  browserName = "chrome",
+  "goog:chromeOptions" = list(
+    args = list("--headless", "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage")
+  )
+)
+
+remDr <- remoteDriver(
+  remoteServerAddr = "localhost",  # or the Docker host IP
+  port = 4444L,
+  browserName = "chrome",
+  extraCapabilities = list(
+    chromeOptions = list(
+      args = list(
+        '--no-sandbox',            # Disable sandbox (required in some environments)
+        '--disable-dev-shm-usage'  # Disable /dev/shm usage
+        # '--headless'  # Make sure headless is not included
+      )
+    )
+  )
+)
+
+
+# Connect to the running Docker container
+# remDr <- remoteDriver(
+#   remoteServerAddr = "localhost",
+#   port = 4444L,
+#   browserName = "chrome"
+#   extraCapabilities = chrome_capabilities
 # )
-# remDr <- rD$client
 
-rD <- rsDriver(browser = "firefox", verbose = FALSE)
-remDr <- rD$client  # This connects to the browser
+# Open browser
+remDr$open()
 
-# Navigate to the target website
-remDr$navigate("https://aqicn.org/forecast/kathmandu/")
+# Navigate and interact
+remDr$navigate("https://www.google.com")
+Sys.sleep(3)
 
-# Wait a bit to ensure the page loads (helps if data loads via JavaScript)
-Sys.sleep(5)
+# Get title to ensure connection works
+page_title <- remDr$getTitle()
+print(page_title)
 
-# Get the full page source
+# Close browser
+remDr$close()
+
+
+# Take a screenshot to verify visually (optional)
+remDr$screenshot(display = TRUE)
+
+# Close the browser and session
+remDr$close()
+
+
+
+
+
+
+
+
+
+
+
+
+# Open a connection
+remDr$open()
+url <- "https://aqicn.org/city/kathmandu/"
+
+# Navigate to a AQI Website
+remDr$navigate(url)
+
+# Explicit wait for the table element (15 seconds max)
+webElem <- tryCatch({
+  remDr$findElement(using = "css selector", ".forecast-body-table")
+}, error = function(e) NULL)
+
+# Check if the table appears
+if (is.null(webElem)) stop("AQI table still didn't load!")
+
+# Now retry getting the page source
+page_source <- remDr$getPageSource()[[1]]
+aqi_html <- read_html(page_source)
+
+
 aqi_html <- read_html(remDr$getPageSource() %>% unlist())
+aqi_html %>%
+  html_element(".forecast-body-table") %>%
+  html_nodes("table") %>%
+  html_table() -> forecast_table
+forecast_table
 
-# Extract the forecast table data
-forecast_table <- aqi_html %>%
-  html_element(".forecast-body-table") %>%  # Selects the main table container
-  html_nodes("table") %>%                    # Finds the table inside
-  html_table()                                # Converts table to a data frame
 
-# Check if the table is successfully extracted
-if (length(forecast_table) == 0) {
-  stop("AQI data table not found!")
+
+
+
+
+
+# Navigate and wait for the AQI table to render
+# Navigate and wait briefly
+remDr$navigate("https://aqicn.org/city/kathmandu/")
+Sys.sleep(3)
+
+# Simulate scrolling (triggers lazy-loading JS)
+remDr$executeScript("window.scrollTo(0, document.body.scrollHeight)")
+Sys.sleep(3)
+
+# Simulate a click (forces data to reload)
+tryCatch({
+  button <- remDr$findElement(using = "css selector", ".some-refresh-button")
+  button$click()
+}, error = function(e) cat("No refresh button found — continuing...\n"))
+
+# Wait and re-check the table
+webElem <- tryCatch({
+  remDr$findElement(using = "css selector", ".forecast-body-table")
+}, error = function(e) NULL)
+
+if (is.null(webElem)) stop("Table still didn't load after interactions!")
+
+# Extract the content
+page_source <- remDr$getPageSource()[[1]]
+cat(substr(page_source, 1, 1000))
+
+
+aqi_html <- read_html(remDr$getPageSource() %>% unlist())
+print(aqi_html)
+# Wait for a specific element to appear
+webElem <- tryCatch({
+  remDr$findElement(using = "css selector", ".forecast-body-table")
+}, error = function(e) NULL)
+
+if (is.null(webElem)) {
+  stop("Failed to load AQI table!")
 }
 
-# Display the scraped data
+# Extract updated page source after table loads
+page_source <- remDr$getPageSource()[[1]]
+aqi_html <- read_html(page_source)
+
+# Extract the table data
+forecast_table <- aqi_html %>%
+  html_element(".forecast-body-table") %>%
+  html_nodes("table") %>%
+  html_table()
+
 print(forecast_table)
 
-# Convert to JSON for easier use or storage
+# Handle missing or empty tables gracefully
+if (length(forecast_table) == 0) {
+  stop("Error: AQI data table not found or failed to load!")
+}
+
+# Display the scraped data for verification
+print(forecast_table)
+
+# Convert the extracted table to JSON for easy storage and processing
 forecast_json <- toJSON(forecast_table, pretty = TRUE, auto_unbox = TRUE)
 print(forecast_json)
 
-# Define output path
+# Define the output path and ensure the folder exists
 output_path <- "output/kathmandu_aqi_forecast.json"
-
-# Ensure output folder exists
 if (!dir.exists("output")) {
   dir.create("output", recursive = TRUE)
 }
 
-# Save data to JSON file
+# Save the data to JSON format
 write(forecast_json, file = output_path)
 
-# Close the Selenium browser and stop server
+# Close Selenium browser and stop the server
 remDr$close()
-rD$server$stop()
 
-print("AQI data successfully scraped and saved!")
+print("✅ AQI data successfully scraped and saved!")
