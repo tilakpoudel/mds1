@@ -56,4 +56,3 @@ print(head(monthly_2022_cumm_deaths))
 write.csv(monthly_2022_cumm_deaths, "output/monthly_2022_cumm_deaths.csv", row.names = FALSE)
 
 cat("Tables scraped and saved!")
-
