@@ -14,7 +14,7 @@ library(RSelenium)
 # Start the remote driver with Chromium
 remDr <- remoteDriver(
   remoteServerAddr = "localhost",
-  port = 4445L, 
+  port = 4444L, 
   browserName = "chrome"  # Selenium will automatically choose Chromium if it's available
 )
 
