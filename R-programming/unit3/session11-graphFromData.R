@@ -13,8 +13,8 @@ barplot(f.cyl)
 # gives error
 # make table
 
-# first we need frequecnies of carz with 4, 6, 8 cylinders
-talble(df$cyl)
+# first we need frequecnies of cars with 4, 6, 8 cylinders
+table(df$cyl)
 
 # barplot of freq of cylinder data
 barplot(table(df$cyl))
