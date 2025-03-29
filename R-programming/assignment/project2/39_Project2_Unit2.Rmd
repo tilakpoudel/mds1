@@ -3,9 +3,9 @@ title: "39_Project2"
 author: "Tilak Poudel"
 date: "2025-03-29"
 output:
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
