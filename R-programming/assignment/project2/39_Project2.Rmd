@@ -1,0 +1,191 @@
+---
+title: "39_Project2"
+author: "Tilak Poudel"
+date: "2025-03-29"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Import covnep_252days.csv file into R studio as covnep_252days data frame
+```{r}
+# load the csv as data frame
+covnep_252days <- read.csv("covnep_252days.csv")
+```
+
+```{r}
+# Display the first few rows of the data frame
+head(covnep_252days)
+```
+
+```{r}
+# Check the structure of the data frame
+str(covnep_252days)
+
+```
+
+First, we loads the data from the CSV file into a dataframe called “covnep_252days”. The head()
+function then displays the first six(default) rows of this dataframe, giving a nature of the dataset’s structure.
+The str() function provides information about the structure of the dataframe, such as number of variables(7), the data types and
+the number of observations(252).
+
+## Covert the date (character date) variable as date variable (date2) using as.Date function (covnep_252days data frame) 
+```{r}
+# Convert the date variable to Date type
+covnep_252days$date2 <- as.Date(covnep_252days$date, format = "%m/%d/%Y")
+
+head(covnep_252days)
+```
+```{r}
+# check the structure of the data frame again
+str(covnep_252days)
+```
+Now, we created a new column date2 of type Date converting from data type char.
+We can see the type of date2 is Date.
+
+##  Create line chart of date2 and totalCases variables and interpret it carefully (covnep_252days data frame)
+```{r}
+Sys.setlocale("LC_TIME", "en_US.UTF-8")  # set locale to english 
+
+plot(
+    covnep_252days$date2, 
+    covnep_252days$totalCases, 
+    type="l",
+    col="blue",
+    lwd=2,
+    xlab="Date", 
+    ylab="Total cases", 
+    main="Total COVID-19 cases over time",
+)
+
+```
+
+We can observe that the case seems to be almost none up to May, and has increased rapidly from end of August.
+
+## Create line chart of date2 and newCases variables and interpret it carefully (covnep_252days data frame)
+```{r}
+plot(
+    covnep_252days$date2, 
+    covnep_252days$newCases, 
+    type="l",
+    col="red",
+    lwd=1,
+    xlab="Date", 
+    ylab="New cases", 
+    main="New COVID-19 cases over time",
+)
+```
+
+#### Interpretation:
+
+1. Early Period (Before April)
+
+- Very few or no reported new cases.
+
+- Possibly due to low transmission, limited testing, or early containment.
+
+2. Gradual Increase (April – July)
+
+- The number of new cases starts rising.
+
+- Fluctuations suggest intermittent outbreaks.
+
+3. Rapid Surge (After July – October)
+
+- A sharp increase in new cases, indicating widespread transmission.
+
+- Peaks and dips suggest waves of infections.
+
+- The highest peak exceeds 2000 cases per day, signaling a significant outbreak.
+
+
+## Create line chart of date2 and totalDeaths variables and interpret it carefully (covnep_252days data frame)
+```{r}
+plot(
+    covnep_252days$date2, 
+    covnep_252days$totalDeaths, 
+    type="l",
+    col="green",
+    lwd=1,
+    xlab="Date", 
+    ylab="Total deaths", 
+    main="Total COVID-19 deaths over time",
+)
+```
+
+Interpretation:
+
+We can say that the number of deaths are none till may and gradually increase till July. The total deaths seems to rise rapidly after July reaching more than 500 per day.
+
+
+## Create line chart of date2 and newDeaths variable and interpret it carefully (covnep_252days data frame)
+```{r}
+plot(
+    covnep_252days$date2, 
+    covnep_252days$newDeaths, 
+    type="l",
+    col="purple",
+    lwd=1,
+    xlab="Date", 
+    ylab="New deaths", 
+    main="New COVID-19 deaths over time",
+)
+```
+
+#### Key Observations from the plot
+It can be interpreted in 3 phases:
+
+1. Early Period (Before April)
+
+- No recorded COVID-19 deaths.
+
+- Likely due to low infections, effective containment, or delays in reporting fatalities.
+
+2. Gradual Increase (April – July)
+
+- A small but noticeable rise in deaths.
+
+- The fluctuations suggest periodic outbreaks, possibly linked to localized surges.
+
+3. Significant Surge (After July – October)
+
+- A sharp increase in deaths, correlating with the earlier observed rise in new cases.
+
+- The highest peaks exceed 15 daily deaths, indicating a worsening outbreak.
+
+- Large fluctuations suggest variability in fatality rates, possibly due to hospital capacity, treatment improvements, or reporting delays.
+
+## Compute summary measures of totalCases, newCases, totalRecoveries, newRecoveries, totalDeaths and newDeaths variables using an appropriate apply family of functions (covnep_252days data frame)
+
+```{r}
+summary_measures <- sapply(covnep_252days[, c("totalCases", "newCases", "totalRecoveries", "newRecoveries", "totalDeaths", "newDeaths")], function(x) {
+  c(
+    mean = mean(x, na.rm = TRUE),
+    median = median(x, na.rm = TRUE),
+    sd = sd(x, na.rm = TRUE),
+    min = min(x, na.rm = TRUE),
+    max = max(x, na.rm = TRUE)
+  )
+})
+
+summary_measures
+```
+
+Here sapply() function from apply function is used to compute the summary of the measures of totalCases, newCases, totalRecoveries, newRecoveries, totalDeaths and newDeaths. The null values are removed with na.rm and there after the mean, median, standard deviation, min and max is computed.
+
+The data shows significant variation in total cases, recoveries, and deaths across observations, with a highly skewed distribution. While the average total cases are 13,376, the median is much lower (963), indicating that a few high-case regions are inflating the mean. Recoveries follow a similar trend, averaging 8,380 but with a median of 182. Deaths are relatively low, with an average of 67 but a median of 6, and most observations report zero new deaths. The high standard deviations confirm substantial disparities, with some locations experiencing extreme spikes in cases, recoveries, and deaths.
+
+
+## Import MR_Drugs.xlxs file into R studio as MR_Drugs data frame and create given table and interpret response percentage and percentage of cases carefully
+```{r}
+library(readxl)
+
+MR_Drugs <- read_excel("data/MR_Drugs.xlsx")
+
+head(MR_Drugs)
+```
