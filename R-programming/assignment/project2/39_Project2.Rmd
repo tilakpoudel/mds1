@@ -3,9 +3,9 @@ title: "39_Project2"
 author: "Tilak Poudel"
 date: "2025-03-29"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -254,3 +254,37 @@ To better understand the distribution, we normalized these counts into percentag
 both within income categories and across the dataset. To organize our findings, we created a dataframe, 
 income_frequencies, which included income levels, total counts, percentages, and percentages of cases. 
 Finally, we added a total row to summarize the overall counts and percentages across all income levels.
+
+## Import SAQ.sav file into R studio as SAQ data frame and create given tables and interpret each frequency table carefully
+```{r}
+library(haven)
+suppressWarnings(library(summarytools))
+
+SAQ8 <- read_sav("SAQ8.sav")
+head(SAQ8)
+```
+
+```{r}
+# check the structure of the data frame
+str(SAQ8)
+```
+
+```{r}
+# find the frequency of each column
+freq(SAQ8$q01, cumul = TRUE, round.digits = 1)
+```
+
+```{r}
+freq(SAQ8$q02, cumul = TRUE, round.digits = 1)
+```
+
+```{r}
+freq(SAQ8$q03, cumul = TRUE, round.digits = 1)
+```
+
+Here, we use the ‘haven’ and ‘summarytools’ libraries to analyze data from a SPSS (.sav) file named
+“SAQ8.sav”. After loading the data into a dataframe called “SAQ8”, the head() function displays the first
+six(default) rows of the dataset. The str() function provides additional information about the dataframe’s
+structure. The freq() function is then employed multiple times to generate frequency tables for different
+variables within the dataset. Each frequency table displays the count and percentage of responses for a specific question or variable, along with cumulative percentages as cumul = TRUE. The round.digits argument
+controls the precision of the percentages displayed in the frequency tables.
