@@ -103,12 +103,56 @@ summary_measures
 # 8. Import MR_Drugs.xlxs file into R studio as MR_Drugs data frame and create given table (Screenshot 10.55.06 AM) and interpret response percentage and percentage of cases carefully
 # import the xlxs file
 library(readxl)
-
+getwd()
 MR_Drugs <- read_excel("data/MR_Drugs.xlsx")
 
 head(MR_Drugs)
+tail(MR_Drugs)
 
 # see the structure of the data frame
 str(MR_Drugs)
+
+# income columns
+drugs_data <- MR_Drugs[, c("inco1", "inco2", "inco3", "inco4", "inco5", "inco6", "inco7")]
+# get sum of every column
+colSums(drugs_data)
+
+# total sum of all columns
+total_sum <- sum(colSums(drugs_data))
+total_sum
+
+# get percentage of each column across whole data
+each_column_percentage_on_all_data <- round(as.numeric(colSums(drugs_data) / total_sum * 100), 1)
+each_column_percentage_on_all_data
+
+# get percentage of each column across whole data
+round(as.numeric(colSums(!is.na(drugs_data)) / total_sum * 100), 1)
+
+# column names
+names(drugs_data)
+
+colSums(!is.na(drugs_data))
+
+levels <- c(names(drugs_data))
+levels
+
+income_frequencies <- data.frame(
+  levels = c(names(drugs_data)),
+  N = colSums(drugs_data),
+  Percent = round(as.numeric(colSums(drugs_data) / (total_sum) * 100), 1),
+  Percent_of_cases = round(as.numeric(colSums(drugs_data) / colSums(!is.na(drugs_data)) * 100), 1)
+)
+
+income_frequencies
+
+row.names(income_frequencies) <- NULL
+total <- c(
+  "Total",
+  sum(as.numeric(income_frequencies$N)),
+  sum(as.numeric(income_frequencies$Percent)),
+  sum(as.numeric(income_frequencies$Percent_of_cases))
+)
+income_frequencies <- rbind(income_frequencies, total)
+income_frequencies
 
 # 9. Import SAQ.sav file into R studio as SAQ data frame and create given tables (e.g Screenshot 11.01.51 for Q1,Q2,Q3) and interpret each frequency table carefully

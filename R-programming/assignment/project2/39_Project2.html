@@ -1847,6 +1847,86 @@ and most observations report zero new deaths. The high standard
 deviations confirm substantial disparities, with some locations
 experiencing extreme spikes in cases, recoveries, and deaths.</p>
 </div>
+<div id="import-mr_drugs.xlxs-file-into-r-studio-as-mr_drugs-data-frame-and-create-given-table-and-interpret-response-percentage-and-percentage-of-cases-carefully" class="section level2">
+<h2>Import MR_Drugs.xlxs file into R studio as MR_Drugs data frame and
+create given table and interpret response percentage and percentage of
+cases carefully</h2>
+<pre class="r"><code>library(readxl)
+MR_Drugs &lt;- read_excel(&quot;MR_Drugs.xlsx&quot;)
+
+head(MR_Drugs)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["sex"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["city"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["inco1"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["inco2"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["inco3"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["inco4"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["inco5"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["inco6"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["inco7"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["pinco1"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["pinco2"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["pinco3"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["pinco4"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["pinco5"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["pinco6"],"name":[16],"type":["dbl"],"align":["right"]},{"label":["sinco1"],"name":[17],"type":["chr"],"align":["left"]},{"label":["sinco2"],"name":[18],"type":["chr"],"align":["left"]},{"label":["sinco3"],"name":[19],"type":["chr"],"align":["left"]},{"label":["sinco4"],"name":[20],"type":["chr"],"align":["left"]},{"label":["sinco5"],"name":[21],"type":["chr"],"align":["left"]},{"label":["sinco6"],"name":[22],"type":["chr"],"align":["left"]},{"label":["crime1"],"name":[23],"type":["dbl"],"align":["right"]},{"label":["crime2"],"name":[24],"type":["dbl"],"align":["right"]},{"label":["crime3"],"name":[25],"type":["dbl"],"align":["right"]},{"label":["crime4"],"name":[26],"type":["dbl"],"align":["right"]},{"label":["crime5"],"name":[27],"type":["dbl"],"align":["right"]}],"data":[{"1":"1001","2":"2","3":"1","4":"0","5":"0","6":"0","7":"0","8":"0","9":"1","10":"0","11":"6","12":"-1","13":"-1","14":"-1","15":"-1","16":"-1","17":"\"mischeln\"/begging","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"0","24":"0","25":"0","26":"0","27":"0"},{"1":"1002","2":"2","3":"1","4":"0","5":"1","6":"0","7":"0","8":"0","9":"0","10":"0","11":"2","12":"-1","13":"-1","14":"-1","15":"-1","16":"-1","17":"public support (unemployment insurance, social benefits)","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"0","24":"0","25":"0","26":"2","27":"0"},{"1":"1003","2":"2","3":"1","4":"0","5":"0","6":"0","7":"0","8":"0","9":"1","10":"0","11":"6","12":"-1","13":"-1","14":"-1","15":"-1","16":"-1","17":"\"mischeln\"/begging","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"0","24":"0","25":"0","26":"0","27":"0"},{"1":"1004","2":"2","3":"1","4":"0","5":"1","6":"0","7":"0","8":"0","9":"0","10":"0","11":"2","12":"-1","13":"-1","14":"-1","15":"-1","16":"-1","17":"public support (unemployment insurance, social benefits)","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"0","24":"0","25":"0","26":"0","27":"0"},{"1":"1005","2":"2","3":"1","4":"0","5":"0","6":"0","7":"0","8":"0","9":"0","10":"1","11":"7","12":"-1","13":"-1","14":"-1","15":"-1","16":"-1","17":"legal occupation","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"0","24":"0","25":"0","26":"0","27":"0"},{"1":"1006","2":"2","3":"1","4":"1","5":"1","6":"0","7":"0","8":"0","9":"0","10":"0","11":"2","12":"1","13":"-1","14":"-1","15":"-1","16":"-1","17":"public support (unemployment insurance, social benefits)","18":"private support (partner, family, friends)","19":"NA","20":"NA","21":"NA","22":"NA","23":"3","24":"1","25":"0","26":"1","27":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code># income columns
+drugs_data &lt;- MR_Drugs[, c(&quot;inco1&quot;, &quot;inco2&quot;, &quot;inco3&quot;, &quot;inco4&quot;, &quot;inco5&quot;, &quot;inco6&quot;, &quot;inco7&quot;)]
+# get sum of every column
+colSums(drugs_data)</code></pre>
+<pre><code>## inco1 inco2 inco3 inco4 inco5 inco6 inco7 
+##   226   607   293    50    82   151   352</code></pre>
+<pre class="r"><code># total sum of all columns
+total_sum &lt;- sum(colSums(drugs_data))
+total_sum</code></pre>
+<pre><code>## [1] 1761</code></pre>
+<pre class="r"><code># get percentage of each column across whole data
+each_column_percentage_on_all_data &lt;- round(as.numeric(colSums(drugs_data) / total_sum * 100), 1)
+each_column_percentage_on_all_data</code></pre>
+<pre><code>## [1] 12.8 34.5 16.6  2.8  4.7  8.6 20.0</code></pre>
+<pre class="r"><code># get percentage of each column across whole data
+round(as.numeric(colSums(!is.na(drugs_data)) / total_sum * 100), 1)</code></pre>
+<pre><code>## [1] 55.2 55.2 55.2 55.2 55.2 55.2 55.2</code></pre>
+<pre class="r"><code># column names
+names(drugs_data)</code></pre>
+<pre><code>## [1] &quot;inco1&quot; &quot;inco2&quot; &quot;inco3&quot; &quot;inco4&quot; &quot;inco5&quot; &quot;inco6&quot; &quot;inco7&quot;</code></pre>
+<pre class="r"><code>colSums(!is.na(drugs_data))</code></pre>
+<pre><code>## inco1 inco2 inco3 inco4 inco5 inco6 inco7 
+##   972   972   972   972   972   972   972</code></pre>
+<pre class="r"><code>levels &lt;- c(names(drugs_data))
+levels</code></pre>
+<pre><code>## [1] &quot;inco1&quot; &quot;inco2&quot; &quot;inco3&quot; &quot;inco4&quot; &quot;inco5&quot; &quot;inco6&quot; &quot;inco7&quot;</code></pre>
+<pre class="r"><code>income_frequencies &lt;- data.frame(
+  levels = c(names(drugs_data)),
+  N = colSums(drugs_data),
+  Percent = round(as.numeric(colSums(drugs_data) / (total_sum) * 100), 1),
+  Percent_of_cases = round(as.numeric(colSums(drugs_data) / colSums(!is.na(drugs_data)) * 100), 1)
+)
+
+income_frequencies</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["levels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["N"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Percent"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Percent_of_cases"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"inco1","2":"226","3":"12.8","4":"23.3","_rn_":"inco1"},{"1":"inco2","2":"607","3":"34.5","4":"62.4","_rn_":"inco2"},{"1":"inco3","2":"293","3":"16.6","4":"30.1","_rn_":"inco3"},{"1":"inco4","2":"50","3":"2.8","4":"5.1","_rn_":"inco4"},{"1":"inco5","2":"82","3":"4.7","4":"8.4","_rn_":"inco5"},{"1":"inco6","2":"151","3":"8.6","4":"15.5","_rn_":"inco6"},{"1":"inco7","2":"352","3":"20.0","4":"36.2","_rn_":"inco7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>row.names(income_frequencies) &lt;- NULL
+total &lt;- c(
+  &quot;Total&quot;,
+  sum(as.numeric(income_frequencies$N)),
+  sum(as.numeric(income_frequencies$Percent)),
+  sum(as.numeric(income_frequencies$Percent_of_cases))
+)
+income_frequencies &lt;- rbind(income_frequencies, total)
+income_frequencies</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["levels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["N"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Percent"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Percent_of_cases"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"inco1","2":"226","3":"12.8","4":"23.3"},{"1":"inco2","2":"607","3":"34.5","4":"62.4"},{"1":"inco3","2":"293","3":"16.6","4":"30.1"},{"1":"inco4","2":"50","3":"2.8","4":"5.1"},{"1":"inco5","2":"82","3":"4.7","4":"8.4"},{"1":"inco6","2":"151","3":"8.6","4":"15.5"},{"1":"inco7","2":"352","3":"20","4":"36.2"},{"1":"Total","2":"1761","3":"100","4":"181"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>In the R code, we used the readxl library to read data from an Excel
+file (MR_Drugs.xlsx) into a dataframe called MR_Drugs. We then used the
+head() function to view the first six rows of the dataset. Next, we
+extracted specific income-related columns (inco1 to inco7) into a new
+dataframe, drugs_data, to focus on relevant data. Using the colSums()
+function, we calculated the total occurrences for each income category.
+To better understand the distribution, we normalized these counts into
+percentages relative to the total sum, both within income categories and
+across the dataset. To organize our findings, we created a dataframe,
+income_frequencies, which included income levels, total counts,
+percentages, and percentages of cases. Finally, we added a total row to
+summarize the overall counts and percentages across all income
+levels.</p>
+</div>
 
 
 
