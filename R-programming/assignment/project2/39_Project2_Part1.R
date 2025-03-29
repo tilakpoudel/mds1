@@ -103,6 +103,7 @@ summary_measures
 # 8. Import MR_Drugs.xlxs file into R studio as MR_Drugs data frame and create given table (Screenshot 10.55.06 AM) and interpret response percentage and percentage of cases carefully
 # import the xlxs file
 library(readxl)
+suppressWarnings(library(summarytools))
 getwd()
 MR_Drugs <- read_excel("data/MR_Drugs.xlsx")
 
@@ -156,3 +157,22 @@ income_frequencies <- rbind(income_frequencies, total)
 income_frequencies
 
 # 9. Import SAQ.sav file into R studio as SAQ data frame and create given tables (e.g Screenshot 11.01.51 for Q1,Q2,Q3) and interpret each frequency table carefully
+library(haven)
+install.packages("summarytools")
+
+getwd()
+setwd('~/projects/tilak/mds1/R-programming')
+getwd()
+suppressWarnings(library(summarytools))
+SAQ8 <- read_sav("assignment/project2/SAQ8.sav")
+head(SAQ8)
+
+# check the structure of the data frame
+str(SAQ8)
+
+# find the frequency of each column
+freq(SAQ8$q01, cumul = TRUE, round.digits = 1)
+
+freq(SAQ8$q02, cumul = TRUE, round.digits = 1)
+
+freq(SAQ8$q03, cumul = TRUE, round.digits = 1)
