@@ -288,3 +288,61 @@ six(default) rows of the dataset. The str() function provides additional informa
 structure. The freq() function is then employed multiple times to generate frequency tables for different
 variables within the dataset. Each frequency table displays the count and percentage of responses for a specific question or variable, along with cumulative percentages as cumul = TRUE. The round.digits argument
 controls the precision of the percentages displayed in the frequency tables.
+
+
+## Text mining and word cloud generation
+```{r}
+old_directory <- getwd()
+
+suppressWarnings({
+    library(pdftools)
+    library(tm)
+    library(magrittr)
+    library(Rgraphviz)
+    library(wordcloud)
+})
+```
+
+```{r}
+setwd("/home/tilak/projects/tilak/mds1/R-programming/assignment/project2/MDS503P2")
+files <- list.files(pattern = "\\.pdf$", full.names = TRUE)
+length(files)
+```
+
+```{r}
+pdf_files <- lapply(files, pdf_text)
+corpus <- Corpus(VectorSource(unlist(pdf_files)))
+inspect(corpus[1])
+```
+
+```{r}
+corpus_copy <- corpus
+suppressWarnings({
+  corpus <- tm_map(corpus, tolower)
+})
+
+inspect(corpus[1:2])
+```
+
+```{r}
+suppressWarnings({
+    corpus <- tm_map(corpus, removePunctuation)
+    corpus <- tm_map(corpus, removeNumbers)
+    corpus <- tm_map(corpus, stemDocument)
+})
+
+corpus_copy <- corpus
+tdm <- TermDocumentMatrix(corpus, control = list(wordLengths = c(1, Inf)))
+low_frequent_terms <- findFreqTerms(tdm, lowfreq = 25)
+
+head(low_frequent_terms)
+```
+
+```{r}
+suppressWarnings({
+    mat <- as.matrix(tdm)
+    freq <- mat %>% rowSums() %>%
+    sort(decreasing = TRUE)
+    wordcloud(words = names(freq), freq = freq, min.freq = 4, random.order = FALSE)
+})
+```
