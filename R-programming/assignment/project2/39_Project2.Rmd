@@ -3,9 +3,9 @@ title: "39_Project2"
 author: "Tilak Poudel"
 date: "2025-03-29"
 output:
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -180,12 +180,77 @@ Here sapply() function from apply function is used to compute the summary of the
 
 The data shows significant variation in total cases, recoveries, and deaths across observations, with a highly skewed distribution. While the average total cases are 13,376, the median is much lower (963), indicating that a few high-case regions are inflating the mean. Recoveries follow a similar trend, averaging 8,380 but with a median of 182. Deaths are relatively low, with an average of 67 but a median of 6, and most observations report zero new deaths. The high standard deviations confirm substantial disparities, with some locations experiencing extreme spikes in cases, recoveries, and deaths.
 
-
 ## Import MR_Drugs.xlxs file into R studio as MR_Drugs data frame and create given table and interpret response percentage and percentage of cases carefully
 ```{r}
 library(readxl)
-
-MR_Drugs <- read_excel("data/MR_Drugs.xlsx")
+MR_Drugs <- read_excel("MR_Drugs.xlsx")
 
 head(MR_Drugs)
 ```
+```{r}
+# income columns
+drugs_data <- MR_Drugs[, c("inco1", "inco2", "inco3", "inco4", "inco5", "inco6", "inco7")]
+# get sum of every column
+colSums(drugs_data)
+```
+
+```{r}
+# total sum of all columns
+total_sum <- sum(colSums(drugs_data))
+total_sum
+```
+
+```{r}
+# get percentage of each column across whole data
+each_column_percentage_on_all_data <- round(as.numeric(colSums(drugs_data) / total_sum * 100), 1)
+each_column_percentage_on_all_data
+```
+
+```{r}
+# get percentage of each column across whole data
+round(as.numeric(colSums(!is.na(drugs_data)) / total_sum * 100), 1)
+```
+
+```{r}
+# column names
+names(drugs_data)
+```
+```{r}
+colSums(!is.na(drugs_data))
+```
+
+```{r}
+levels <- c(names(drugs_data))
+levels
+```
+```{r}
+income_frequencies <- data.frame(
+  levels = c(names(drugs_data)),
+  N = colSums(drugs_data),
+  Percent = round(as.numeric(colSums(drugs_data) / (total_sum) * 100), 1),
+  Percent_of_cases = round(as.numeric(colSums(drugs_data) / colSums(!is.na(drugs_data)) * 100), 1)
+)
+
+income_frequencies
+```
+
+```{r}
+
+row.names(income_frequencies) <- NULL
+total <- c(
+  "Total",
+  sum(as.numeric(income_frequencies$N)),
+  sum(as.numeric(income_frequencies$Percent)),
+  sum(as.numeric(income_frequencies$Percent_of_cases))
+)
+income_frequencies <- rbind(income_frequencies, total)
+income_frequencies
+```
+In the R code, we used the readxl library to read data from an Excel file (MR_Drugs.xlsx) into a dataframe called 
+MR_Drugs. We then used the head() function to view the first six rows of the dataset. 
+Next, we extracted specific income-related columns (inco1 to inco7) into a new dataframe, drugs_data, 
+to focus on relevant data. Using the colSums() function, we calculated the total occurrences for each income category. 
+To better understand the distribution, we normalized these counts into percentages relative to the total sum, 
+both within income categories and across the dataset. To organize our findings, we created a dataframe, 
+income_frequencies, which included income levels, total counts, percentages, and percentages of cases. 
+Finally, we added a total row to summarize the overall counts and percentages across all income levels.
