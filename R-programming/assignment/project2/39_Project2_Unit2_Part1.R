@@ -12,13 +12,13 @@
 
 # install tinytex to generate the report in pdf
 # install.packages("tinytex")
-tinytex::install_tinytex()  # Installs LaTeX distribution
+# tinytex::install_tinytex()  # Installs LaTeX distribution
 
 
 getwd()
 
 # load the csv as data frame
-covnep_252days <- read.csv("data/covnep_252days.csv")
+covnep_252days <- read.csv("covnep_252days.csv")
 
 # Display the first few rows of the data frame
 head(covnep_252days)
@@ -105,7 +105,7 @@ summary_measures
 library(readxl)
 suppressWarnings(library(summarytools))
 getwd()
-MR_Drugs <- read_excel("data/MR_Drugs.xlsx")
+MR_Drugs <- read_excel("MR_Drugs.xlsx")
 
 head(MR_Drugs)
 tail(MR_Drugs)
@@ -158,13 +158,10 @@ income_frequencies
 
 # 9. Import SAQ.sav file into R studio as SAQ data frame and create given tables (e.g Screenshot 11.01.51 for Q1,Q2,Q3) and interpret each frequency table carefully
 library(haven)
-install.packages("summarytools")
+# install.packages("summarytools")
 
-getwd()
-setwd('~/projects/tilak/mds1/R-programming')
-getwd()
 suppressWarnings(library(summarytools))
-SAQ8 <- read_sav("assignment/project2/SAQ8.sav")
+SAQ8 <- read_sav("SAQ8.sav")
 head(SAQ8)
 
 # check the structure of the data frame

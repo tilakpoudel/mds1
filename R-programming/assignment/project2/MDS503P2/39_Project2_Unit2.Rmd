@@ -1,0 +1,350 @@
+---
+title: "39_Project2"
+author: "Tilak Poudel"
+date: "2025-03-29"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+  setwd("/home/tilak/projects/tilak/mds1/R-programming/assignment/project2/MDS503P2")
+
+```
+## Import covnep_252days.csv file into R studio as covnep_252days data frame
+```{r}
+# load the csv as data frame
+covnep_252days <- read.csv("covnep_252days.csv")
+```
+
+```{r}
+# Display the first few rows of the data frame
+head(covnep_252days)
+```
+
+```{r}
+# Check the structure of the data frame
+str(covnep_252days)
+
+```
+
+First, we loads the data from the CSV file into a dataframe called “covnep_252days”. The head()
+function then displays the first six(default) rows of this dataframe, giving a nature of the dataset’s structure.
+The str() function provides information about the structure of the dataframe, such as number of variables(7), the data types and
+the number of observations(252).
+
+## Covert the date (character date) variable as date variable (date2) using as.Date function (covnep_252days data frame) 
+```{r}
+# Convert the date variable to Date type
+covnep_252days$date2 <- as.Date(covnep_252days$date, format = "%m/%d/%Y")
+
+head(covnep_252days)
+```
+```{r}
+# check the structure of the data frame again
+str(covnep_252days)
+```
+Now, we created a new column date2 of type Date converting from data type char.
+We can see the type of date2 is Date.
+
+##  Create line chart of date2 and totalCases variables and interpret it carefully (covnep_252days data frame)
+```{r}
+Sys.setlocale("LC_TIME", "en_US.UTF-8")  # set locale to english 
+
+plot(
+    covnep_252days$date2, 
+    covnep_252days$totalCases, 
+    type="l",
+    col="blue",
+    lwd=2,
+    xlab="Date", 
+    ylab="Total cases", 
+    main="Total COVID-19 cases over time",
+)
+
+```
+
+We can observe that the case seems to be almost none up to May, and has increased rapidly from end of August.
+
+## Create line chart of date2 and newCases variables and interpret it carefully (covnep_252days data frame)
+```{r}
+plot(
+    covnep_252days$date2, 
+    covnep_252days$newCases, 
+    type="l",
+    col="red",
+    lwd=1,
+    xlab="Date", 
+    ylab="New cases", 
+    main="New COVID-19 cases over time",
+)
+```
+
+#### Interpretation:
+
+1. Early Period (Before April)
+
+- Very few or no reported new cases.
+
+- Possibly due to low transmission, limited testing, or early containment.
+
+2. Gradual Increase (April – July)
+
+- The number of new cases starts rising.
+
+- Fluctuations suggest intermittent outbreaks.
+
+3. Rapid Surge (After July – October)
+
+- A sharp increase in new cases, indicating widespread transmission.
+
+- Peaks and dips suggest waves of infections.
+
+- The highest peak exceeds 2000 cases per day, signaling a significant outbreak.
+
+
+## Create line chart of date2 and totalDeaths variables and interpret it carefully (covnep_252days data frame)
+```{r}
+plot(
+    covnep_252days$date2, 
+    covnep_252days$totalDeaths, 
+    type="l",
+    col="green",
+    lwd=1,
+    xlab="Date", 
+    ylab="Total deaths", 
+    main="Total COVID-19 deaths over time",
+)
+```
+
+Interpretation:
+
+We can say that the number of deaths are none till may and gradually increase till July. The total deaths seems to rise rapidly after July reaching more than 500 per day.
+
+
+## Create line chart of date2 and newDeaths variable and interpret it carefully (covnep_252days data frame)
+```{r}
+plot(
+    covnep_252days$date2, 
+    covnep_252days$newDeaths, 
+    type="l",
+    col="purple",
+    lwd=1,
+    xlab="Date", 
+    ylab="New deaths", 
+    main="New COVID-19 deaths over time",
+)
+```
+
+#### Key Observations from the plot
+It can be interpreted in 3 phases:
+
+1. Early Period (Before April)
+
+- No recorded COVID-19 deaths.
+
+- Likely due to low infections, effective containment, or delays in reporting fatalities.
+
+2. Gradual Increase (April – July)
+
+- A small but noticeable rise in deaths.
+
+- The fluctuations suggest periodic outbreaks, possibly linked to localized surges.
+
+3. Significant Surge (After July – October)
+
+- A sharp increase in deaths, correlating with the earlier observed rise in new cases.
+
+- The highest peaks exceed 15 daily deaths, indicating a worsening outbreak.
+
+- Large fluctuations suggest variability in fatality rates, possibly due to hospital capacity, treatment improvements, or reporting delays.
+
+## Compute summary measures of totalCases, newCases, totalRecoveries, newRecoveries, totalDeaths and newDeaths variables using an appropriate apply family of functions (covnep_252days data frame)
+
+```{r}
+summary_measures <- sapply(covnep_252days[, c("totalCases", "newCases", "totalRecoveries", "newRecoveries", "totalDeaths", "newDeaths")], function(x) {
+  c(
+    mean = mean(x, na.rm = TRUE),
+    median = median(x, na.rm = TRUE),
+    sd = sd(x, na.rm = TRUE),
+    min = min(x, na.rm = TRUE),
+    max = max(x, na.rm = TRUE)
+  )
+})
+
+summary_measures
+```
+
+Here sapply() function from apply function is used to compute the summary of the measures of totalCases, newCases, totalRecoveries, newRecoveries, totalDeaths and newDeaths. The null values are removed with na.rm and there after the mean, median, standard deviation, min and max is computed.
+
+The data shows significant variation in total cases, recoveries, and deaths across observations, with a highly skewed distribution. While the average total cases are 13,376, the median is much lower (963), indicating that a few high-case regions are inflating the mean. Recoveries follow a similar trend, averaging 8,380 but with a median of 182. Deaths are relatively low, with an average of 67 but a median of 6, and most observations report zero new deaths. The high standard deviations confirm substantial disparities, with some locations experiencing extreme spikes in cases, recoveries, and deaths.
+
+## Import MR_Drugs.xlxs file into R studio as MR_Drugs data frame and create given table and interpret response percentage and percentage of cases carefully
+```{r}
+library(readxl)
+MR_Drugs <- read_excel("MR_Drugs.xlsx")
+
+head(MR_Drugs)
+```
+```{r}
+# income columns
+drugs_data <- MR_Drugs[, c("inco1", "inco2", "inco3", "inco4", "inco5", "inco6", "inco7")]
+# get sum of every column
+colSums(drugs_data)
+```
+
+```{r}
+# total sum of all columns
+total_sum <- sum(colSums(drugs_data))
+total_sum
+```
+
+```{r}
+# get percentage of each column across whole data
+each_column_percentage_on_all_data <- round(as.numeric(colSums(drugs_data) / total_sum * 100), 1)
+each_column_percentage_on_all_data
+```
+
+```{r}
+# get percentage of each column across whole data
+round(as.numeric(colSums(!is.na(drugs_data)) / total_sum * 100), 1)
+```
+
+```{r}
+# column names
+names(drugs_data)
+```
+```{r}
+colSums(!is.na(drugs_data))
+```
+
+```{r}
+levels <- c(names(drugs_data))
+levels
+```
+```{r}
+income_frequencies <- data.frame(
+  levels = c(names(drugs_data)),
+  N = colSums(drugs_data),
+  Percent = round(as.numeric(colSums(drugs_data) / (total_sum) * 100), 1),
+  Percent_of_cases = round(as.numeric(colSums(drugs_data) / colSums(!is.na(drugs_data)) * 100), 1)
+)
+
+income_frequencies
+```
+
+```{r}
+
+row.names(income_frequencies) <- NULL
+total <- c(
+  "Total",
+  sum(as.numeric(income_frequencies$N)),
+  sum(as.numeric(income_frequencies$Percent)),
+  sum(as.numeric(income_frequencies$Percent_of_cases))
+)
+income_frequencies <- rbind(income_frequencies, total)
+income_frequencies
+```
+In the R code, we used the readxl library to read data from an Excel file (MR_Drugs.xlsx) into a dataframe called 
+MR_Drugs. We then used the head() function to view the first six rows of the dataset. 
+Next, we extracted specific income-related columns (inco1 to inco7) into a new dataframe, drugs_data, 
+to focus on relevant data. Using the colSums() function, we calculated the total occurrences for each income category. 
+To better understand the distribution, we normalized these counts into percentages relative to the total sum, 
+both within income categories and across the dataset. To organize our findings, we created a dataframe, 
+income_frequencies, which included income levels, total counts, percentages, and percentages of cases. 
+Finally, we added a total row to summarize the overall counts and percentages across all income levels.
+
+## Import SAQ.sav file into R studio as SAQ data frame and create given tables and interpret each frequency table carefully
+```{r}
+library(haven)
+suppressWarnings(library(summarytools))
+
+SAQ8 <- read_sav("SAQ8.sav")
+head(SAQ8)
+```
+
+```{r}
+# check the structure of the data frame
+str(SAQ8)
+```
+
+```{r}
+# find the frequency of each column
+freq(SAQ8$q01, cumul = TRUE, round.digits = 1)
+```
+
+```{r}
+freq(SAQ8$q02, cumul = TRUE, round.digits = 1)
+```
+
+```{r}
+freq(SAQ8$q03, cumul = TRUE, round.digits = 1)
+```
+
+Here, we use the ‘haven’ and ‘summarytools’ libraries to analyze data from a SPSS (.sav) file named
+“SAQ8.sav”. After loading the data into a dataframe called “SAQ8”, the head() function displays the first
+six(default) rows of the dataset. The str() function provides additional information about the dataframe’s
+structure. The freq() function is then employed multiple times to generate frequency tables for different
+variables within the dataset. Each frequency table displays the count and percentage of responses for a specific question or variable, along with cumulative percentages as cumul = TRUE. The round.digits argument
+controls the precision of the percentages displayed in the frequency tables.
+
+
+## Text mining and word cloud generation
+```{r}
+old_directory <- getwd()
+
+suppressWarnings({
+    library(pdftools)
+    library(tm)
+    library(magrittr)
+    library(Rgraphviz)
+    library(wordcloud)
+})
+```
+
+```{r}
+files <- list.files(pattern = "\\.pdf$", full.names = TRUE)
+length(files)
+```
+
+```{r}
+pdf_files <- lapply(files, pdf_text)
+corpus <- Corpus(VectorSource(unlist(pdf_files)))
+inspect(corpus[1])
+```
+
+```{r}
+corpus_copy <- corpus
+suppressWarnings({
+  corpus <- tm_map(corpus, tolower)
+})
+
+inspect(corpus[1:2])
+```
+
+```{r}
+suppressWarnings({
+    corpus <- tm_map(corpus, removePunctuation)
+    corpus <- tm_map(corpus, removeNumbers)
+    corpus <- tm_map(corpus, stemDocument)
+})
+
+corpus_copy <- corpus
+tdm <- TermDocumentMatrix(corpus, control = list(wordLengths = c(1, Inf)))
+low_frequent_terms <- findFreqTerms(tdm, lowfreq = 25)
+
+head(low_frequent_terms)
+```
+
+```{r}
+suppressWarnings({
+    mat <- as.matrix(tdm)
+    freq <- mat %>% rowSums() %>%
+    sort(decreasing = TRUE)
+    wordcloud(words = names(freq), freq = freq, min.freq = 4, random.order = FALSE)
+})
+```
