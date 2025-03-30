@@ -348,3 +348,5 @@ suppressWarnings({
     wordcloud(words = names(freq), freq = freq, min.freq = 4, random.order = FALSE)
 })
 ```
+
+From the word cloud, we can see that the word `the`, `and`, `of`, `to`, `in` has the maximum occurrence, thereafter the words `text`, `mine`, `document`, `inform`, `data` are the other words that are more prominent in the documents.
