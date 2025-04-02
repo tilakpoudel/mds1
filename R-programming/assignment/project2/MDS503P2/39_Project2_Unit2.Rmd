@@ -1,5 +1,5 @@
 ---
-title: "39_Project2"
+title: "39_Project2_Unit2"
 author: "Tilak Poudel"
 date: "2025-03-29"
 output:
@@ -329,12 +329,14 @@ inspect(corpus[1:2])
 ```{r}
 suppressWarnings({
     corpus <- tm_map(corpus, removePunctuation)
+    corpus <- tm_map(corpus, removeWords, stopwords("en"))
+    corpus <- tm_map(corpus, stripWhitespace)
     corpus <- tm_map(corpus, removeNumbers)
     corpus <- tm_map(corpus, stemDocument)
 })
 
 corpus_copy <- corpus
-tdm <- TermDocumentMatrix(corpus, control = list(wordLengths = c(1, Inf)))
+tdm <- TermDocumentMatrix(corpus, control = list(wordLengths = c(3, Inf)))
 low_frequent_terms <- findFreqTerms(tdm, lowfreq = 25)
 
 head(low_frequent_terms)
@@ -345,8 +347,21 @@ suppressWarnings({
     mat <- as.matrix(tdm)
     freq <- mat %>% rowSums() %>%
     sort(decreasing = TRUE)
-    wordcloud(words = names(freq), freq = freq, min.freq = 4, random.order = FALSE)
+    wordcloud(
+      words = names(freq), 
+      freq = freq, 
+      min.freq = 5, 
+      random.order = FALSE, 
+      colors = brewer.pal(8, "Dark2")
+    )
 })
 ```
 
-From the word cloud, we can see that the word `the`, `and`, `of`, `to`, `in` has the maximum occurrence, thereafter the words `text`, `mine`, `document`, `inform`, `data` are the other words that are more prominent in the documents.
+The word cloud visually represents the frequency of words related to text mining, information retrieval, and natural language processing. The most prominent words (largest in size) indicate their higher frequency and importance in the data set.
+
+`text`, `document`, `mine`, `extract`, `inform`, `use`, `data` are the most frequent words and suggest that the primary topic revolves around text mining, document processing, and extracting useful information from text data.
+
+`analysis`, `rule`, `process`, `knowledge`, `language`, `pattern`, `retrieval`, `classification` are the significant related terms. These words indicate key techniques and objectives in text mining, such as analyzing textual patterns, retrieving relevant information, and applying rules or classifications.
+
+`sentiment`, `vector`, `model`, `corpus`, `journal`, `approach`, `visual`, `automatic`, `structure` are less frequent but relevant terms. These words hint at advanced techniques in text analysis, such as sentiment analysis, vector space modeling, and structured information extraction.
+
