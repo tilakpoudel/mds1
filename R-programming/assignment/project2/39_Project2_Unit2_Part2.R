@@ -24,24 +24,33 @@ inspect(corpus[1])
 
 corpus_copy <- corpus
 suppressWarnings({
-corpus <- tm_map(corpus, tolower)
+  corpus <- tm_map(corpus, tolower)
 })
 inspect(corpus[1:2])
 
 
 suppressWarnings({
-    corpus <- tm_map(corpus, removePunctuation)
-    corpus <- tm_map(corpus, removeNumbers)
-    corpus <- tm_map(corpus, stemDocument)
+  corpus <- tm_map(corpus, removePunctuation)
+  corpus <- tm_map(corpus, removeWords, stopwords("en"))
+  corpus <- tm_map(corpus, stripWhitespace)
+  corpus <- tm_map(corpus, removeNumbers)
+  corpus <- tm_map(corpus, stemDocument)
 })
+
 corpus_copy <- corpus
-tdm <- TermDocumentMatrix(corpus, control = list(wordLengths = c(1, Inf)))
+tdm <- TermDocumentMatrix(corpus, control = list(wordLengths = c(3, Inf)))
 low_frequent_terms <- findFreqTerms(tdm, lowfreq = 25)
 head(low_frequent_terms)
 
 suppressWarnings({
-    mat <- as.matrix(tdm)
-    freq <- mat %>% rowSums() %>%
-    sort(decreasing = TRUE)
-    wordcloud(words = names(freq), freq = freq, min.freq = 4, random.order = FALSE)
+  mat <- as.matrix(tdm)
+  freq <- mat %>% rowSums() %>%
+  sort(decreasing = TRUE)
+  wordcloud(
+    words = names(freq), 
+    freq = freq, 
+    min.freq = 5, 
+    random.order = FALSE, 
+    colors = brewer.pal(8, "Dark2")
+  )
 })
