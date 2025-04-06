@@ -17,18 +17,14 @@
 
 #include <stdio.h>
 
-void exchange(int *a, int *b) {
-    int temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
 void merge(int a[], int l, int m, int r) {
     int n1 = m - l + 1;
     int n2 = r - m;
 
+    // Temp arrays
     int L[n1], R[n2];
 
+    // Copy data
     for(int i = 0; i < n1; i++) {
         L[i] = a[l + i];
     }
@@ -37,6 +33,9 @@ void merge(int a[], int l, int m, int r) {
         R[j] = a[m + 1 + j];
     }
 
+    
+    // Merge temp arrays
+    // Initial indexes of first and second subarrays
     int i = 0, j = 0, k = l;
 
     while(i < n1 && j < n2) {
@@ -50,6 +49,8 @@ void merge(int a[], int l, int m, int r) {
         k++;
     }
 
+    // Copy remaining elements
+    // Copy remaining elements of L[] if any
     while(i < n1) {
         a[k] = L[i];
         i++;
@@ -63,6 +64,7 @@ void merge(int a[], int l, int m, int r) {
     }
 }
 
+// Merge Sort function
 void mergeSort(int a[], int l, int r) {
     if(l < r) {
         int m = l + (r - l) / 2;
