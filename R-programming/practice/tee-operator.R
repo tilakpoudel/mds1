@@ -15,3 +15,11 @@ rnorm(200) %>%
   matrix(ncol = 2) %T>%
   plot %>%
   colSums
+
+x<-rnorm(100)
+
+hist(x)
+qqnorm(x)
+qqline(x)
+shapiro.test(x)
+scatter.smooth(x)
