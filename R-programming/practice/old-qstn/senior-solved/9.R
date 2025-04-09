@@ -1,0 +1,103 @@
+# Do the followings in R Studio using "USArrests" dataset with R script:
+
+# Load necessary libraries
+library(caret)
+library(class)
+library(MASS)
+
+# Load the dataset
+data("USArrests")
+
+# Set a random seed for reproducibility
+set.seed(35)
+
+# a. Divide the USArrests data into train and test datasets  with 70:30 random splits.
+
+# Split the data into train and test datasets (70:30 split)
+trainIndex <- createDataPartition(USArrests$UrbanPop,
+                                  p = 0.7,
+                                  list = FALSE)
+trainData <- USArrests[trainIndex, ]
+testData <- USArrests[-trainIndex, ]
+
+# Check dimensions of train and test sets
+dim(trainData) # Train dataset dimensions
+dim(testData)  # Test dataset dimensions
+
+# b. Fit a supervised linear regression model and KNN regression model on train data with "Urban population-UrbanPop" as dependent variable and all other variables as independent variable.
+
+lm_model <- lm(UrbanPop ~ .,
+               data = trainData)
+
+# Print summary of the linear regression model
+summary(lm_model)
+
+# Normalizing the data
+preProcValues <- preProcess(trainData,
+                            method = c("center", "scale"))
+trainDataNorm <- predict(preProcValues,
+                         trainData)
+testDataNorm <- predict(preProcValues,
+                        testData)
+
+# Define the independent and dependent variables for KNN
+trainX <- trainDataNorm[, -3]
+trainY <- trainDataNorm[, 3]
+testX <- testDataNorm[, -3]
+
+# Finding the optimal number of neighbors (k) using cross-validation
+set.seed(35)
+knn_fit <- train(trainX,
+                 trainY,
+                 method = "knn",
+                 tuneLength = 10,
+                 trControl = trainControl(method = "cv"))
+
+# Print the best k value
+knn_fit$bestTune
+
+# Train the final KNN model with the optimal k
+knn_model <- knn(train = trainX,
+                 test = testX,
+                 cl = trainY,
+                 k = knn_fit$bestTune$k)
+
+# c. Predict the UrbanPop variable in the test datasets using these two models and interpret results carefully.
+
+# linear model
+lm_pred <- predict(lm_model,
+                   testData)
+
+# KNN model
+knn_pred <- as.numeric(knn_model)
+
+# d. Compare the fit indices (R-square, MSE, RMSE) of the two predicted models and choose the best model.
+
+# Calculate R-squared, MSE, and RMSE for linear regression model
+lm_r2 <- cor(testData$UrbanPop,
+             lm_pred)^2
+lm_mse <- mean((testData$UrbanPop - lm_pred)^2)
+lm_rmse <- sqrt(lm_mse)
+
+# Calculate R-squared, MSE, and RMSE for KNN model
+knn_r2 <- cor(testData$UrbanPop, knn_pred)^2
+knn_mse <- mean((testData$UrbanPop - knn_pred)^2)
+knn_rmse <- sqrt(knn_mse)
+
+# Print the results
+cat("Linear Regression Model:\n")
+cat("R-squared:", lm_r2, "\n")
+cat("MSE:", lm_mse, "\n")
+cat("RMSE:", lm_rmse, "\n\n")
+
+cat("KNN Regression Model:\n")
+cat("R-squared:", knn_r2, "\n")
+cat("MSE:", knn_mse, "\n")
+cat("RMSE:", knn_rmse, "\n")
+
+# Compare and choose the best model based on the fit indices
+if (lm_rmse < knn_rmse) {
+  cat("The Linear Regression model is better based on RMSE.\n")
+} else {
+  cat("The KNN Regression model is better based on RMSE.\n")
+}
