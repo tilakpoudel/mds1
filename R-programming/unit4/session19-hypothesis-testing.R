@@ -111,3 +111,6 @@ cor.test(mtcars$am, mtcars$mpg)
 # data:  mtcars$am and mtcars$mpg
 # t = 4.1061, df = 30, p-value = 0.000285
 # p-value < 0.05, it means it is linear
+
+
+# ONE SAMPLE Proportion test
