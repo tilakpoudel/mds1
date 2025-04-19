@@ -1,9 +1,21 @@
+// Linear probing
+// It is collision resolution techinque,
+
+
 #include<stdio.h>
 int a[10] = {NULL};
 
 int hash(int k)
 {
     return k % 10;
+}
+
+int indexWithLinearProbing(int i, int j) {
+    return (i + j) % 10;
+}
+
+int indexWithQuadraticProbing (int i, int j) {
+    return (i + (j*j)) % 10;
 }
 
 void insert(int k)
@@ -14,7 +26,7 @@ void insert(int k)
     // by checking the next indices in a circular manner
     for(int j = 0; j < 10; j++)
     {
-        index = (i + j) % 10;
+        index = indexWithQuadraticProbing(i, j);
 
         if(a[index]==NULL)
         {
@@ -32,7 +44,7 @@ int search(int k)
 
     for(int j = 0; j < 10; j++)
     {
-        index = (i + j) % 10;
+        index = indexWithQuadraticProbing(i, j);
 
         if(a[index]==k)
         {
@@ -50,7 +62,7 @@ void del(int k)
 
     for(int j = 0; j < 10; j++)
     {
-        index = (i + j) % 10;
+        index = indexWithQuadraticProbing(i, j);
 
         if(a[index]==k)
         {
