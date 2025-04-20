@@ -57,7 +57,7 @@ g4[1,]
 V(g4)$name
 #Names of vertices in g4
 
-The `E` function is used to get the edges of the graph `g4`, and the `V` function is used to get the vertices of the graph. The `g4[]` notation is used to get the matrix of edges with respect to different vertices, and the `g4[1,]` notation is used to get the number of vertices associated with the first vertex. The `V(g4)$name` notation is used to get the names of the vertices in `g4`.
+# The `E` function is used to get the edges of the graph `g4`, and the `V` function is used to get the vertices of the graph. The `g4[]` notation is used to get the matrix of edges with respect to different vertices, and the `g4[1,]` notation is used to get the number of vertices associated with the first vertex. The `V(g4)$name` notation is used to get the names of the vertices in `g4`.
 
 #Different attributes can be set on vertex and edge of g4
 V(g4)$gender <-c("male","male","male","male","female","female","male")
@@ -69,7 +69,7 @@ edge_attr(g4)
 vertex_attr(g4)
 graph_attr(g4)
 
-Attributes can also be set a s following ways:
+# Attributes can also be set a s following ways:
 
 g4 <- set_graph_attr(g4,"name","Email Network")
 graph_attr_names(g4)
@@ -304,7 +304,7 @@ plot(net, edge.color=edge.col, edge.curved=.1)
 # We plot the network with colored edges based on the starting vertex using the `ends` function to get the starting vertices of the edges. The `edge.color` argument is used to set the color of the edges based on the starting vertex color. The `edge.curved` argument is set to 0.1 to create curved edges.
 
 ## Network layouts
-Network layouts are simply algorithms that return coordinates for each node in a network.
+# Network layouts are simply algorithms that return coordinates for each node in a network.
 
 net.bg <- sample_pa(80)
 V(net.bg)$size <- 8
@@ -379,7 +379,7 @@ for (layout in layouts) {
 # We can identify the type and size of nodes,
 # but cannot see much about the structure since the links we’re examining are so dense. One way to
 # approach this is to see if we can sparsify the network, keeping only the most important ties and
-discarding the rest.
+# discarding the rest.
 
 hist(links$weight)
 mean(links$weight)
@@ -458,7 +458,7 @@ plot(net2, vertex.shape="none", vertex.label=nodes2$media,
 
 ## 6. Network and node desctiptives
 ### 6.1 Density
-It is the proportion of edges in the network to the maximum possible number of edges.
+# It is the proportion of edges in the network to the maximum possible number of edges.
 edge_density(net, loops = F)
 
 ecount(net)/(vcount(net)*(vcount(net)-1)) #for a directed network
@@ -474,8 +474,8 @@ dyad_census(net) # Mutual, asymmetric, and nyll node pairs
 
 ### 6.3 Transitivity
 # Transitivity is the proportion of triangles in the network to the number of connected triples.
-global - ratio of triangles to connected triples
-local - ratio of triangles to connected triples for each node
+# global - ratio of triangles to connected triples
+# local - ratio of triangles to connected triples for each node
 
 transitivity(net, type="global") # net is treated as an undirected network
 transitivity(as_undirected(net, mode="collapse"))
