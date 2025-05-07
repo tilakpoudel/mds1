@@ -149,11 +149,28 @@ summary(mlr)
 The p-value(5.855e-08) of the model is less than 0.05, indicating that the model is statistically significant. The R-squared value is 0.849 (>0.5), which means that 84.9% of the variance in mpg can be explained by the number of cylinders (cyl), displacement (disp), horsepower (hp), and weight (wt).
 
 # 5. Get VIF of all these variables to check multicollinearity and run the final model until none of the variables have VIF >= 10
+
+```{r vif_linear_model}
+# multiple linear model with all variables
+mlr0 <- lm(mpg ~ ., data = train_data)
+summary(mlr0)
+# Check VIF
+vif(mlr0)
+```
+The VIF values for the variables are greater than 10, indicating that there is multicollinearity among the variables. The variables with VIF > 10 are : cycl, disp, wt. So remove them
+
+```{r remove_multicollinearity}
+# Remove the variables with VIF > 10
+mlr2 <- lm(mpg ~ drat+wt+qsec+vs+am+gear+carb, data = train_data)
+vif(mlr2)
+summary(mlr2)
+```
+
 ```{r vif}
 vif(mlr)
 
 ```
-The VIF values for the possible statistically significant variables are less than 10, indicating that there is no multicollinearity among the variables. So the variables cyl, disp, hp, and wt can be used in the final model.
+ALthought the VIF for other variable are <=10. From step 3 we got the significiant variables with R-squared > 0.5. So the variables with R-squared >0.5 and vif <=10 are considered statistically significiant. The VIF values for the possible statistically significant variables are less than 10, indicating that there is no multicollinearity among the variables. So the variables `cyl, disp, hp, and wt` can be used in the final model.
 
 # 6. Get summary and accuracy indices (R-square, RMSE, MAE) of the final model fitted with variables having VIF < 10
 ```{r accuracy_indices}
@@ -289,8 +306,8 @@ r_squared_test <- 1 - (sum((predictions - test_data$mpg)^2) / sum((mean(test_dat
 # Print the accuracy indices
 cat("R-squared:", r_squared_test, "\t", "RMSE:", rmse_test, "\t", "MAE:", mae_test, "\n")
 ```
-The R-squared value is 0.849, RMSE is 2.55, and MAE is 2.05. The R-squared value indicates that 84.9% of the variance in mpg can be explained by the number of cylinders (cyl), displacement (disp), horsepower (hp), and weight (wt). The RMSE and MAE values indicate that the model has a good fit to the data.
-RMSE 3.19 means taht the average difference between the predicted and actual values is 3.19 mpg. MAE 2.55 means that the average absolute difference between the predicted and actual values is 2.55 mpg. The model has a good fit to the data and can be used for prediction.
+The R-squared value is 0.7648606, RMSE is 3.1926, and MAE is 2.5295. The R-squared value indicates that 76.48% of the variance in mpg can be explained by the number of cylinders (cyl), displacement (disp), horsepower (hp), and weight (wt). The RMSE and MAE values indicate that the model has a good fit to the data.
+RMSE 3.19 means taht the average difference between the predicted and actual values is 3.19 mpg. MAE 2.529 means that the average absolute difference between the predicted and actual values is 2.529 mpg. The model has a good fit to the data and can be used for prediction.
 
 # 10. Prediction: How much mpg is given by a car with 6000 lbs weight based on training and testing data? Which is correct?
 ```{r prediction_6000lbs_train_data}
