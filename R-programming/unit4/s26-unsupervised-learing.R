@@ -38,7 +38,7 @@ summary(fa.2)
 USArrests.1 <- scale(USArrests[,-3])
 #  classical MDS with kruskal stress
 # we first need distance
-#  distance calculationm
+#  distance calculation
 state.disimilarity <- dist(USArrests.1)
 # MDS fit 
 mds.1 <- cmdscale(state.disimilarity)
@@ -49,7 +49,7 @@ summary(mds.1)
 plot(mds.1, pch=19)
 abline(h=0, v=0)
 
-#  We can tryuisng sammon's stress
+#  We can try uisng sammon's stress
 library(MASS)
 mds2 <- sammon(state.disimilarity, trace = FALSE)
 mds2
