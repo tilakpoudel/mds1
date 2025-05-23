@@ -1,3 +1,19 @@
+/*
+    Priority Queue using Array in C
+
+    A Priority Queue is a special type of queue where each element has a priority, and elements with higher priority 
+    are dequeued before elements with lower priority. If two elements have the same priority, they follow 
+    the First-In-First-Out (FIFO) order.
+
+    Implementation using Arrays
+    We will use an array to store elements along with their priorities. The basic operations are:
+
+    - Insertion (enqueue): Insert an element into the queue at the correct position based on priority.
+    - Deletion (dequeue): Remove the element with the highest priority.
+    - Display: Show all elements along with their priorities.
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -116,8 +132,12 @@ int main() {
 }
 
 /*
+    Time Complexity
+    - Insertion (enqueue): O(n) (since we shift elements to maintain order)
+    - Deletion (dequeue): O(n) (shifting elements after removal).
+    - Display (display): O(n).
+
     Testing
-    
     Priority Queue Operations:
     1. Enqueue
     2. Dequeue
