@@ -1,0 +1,94 @@
+---
+title: '7'
+author: "Utsab Bhattarai"
+date: "2024-06-27"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Do the followings in R studio using "airquality" dataset with R script:
+```{r}
+# Load necessary packages
+library(ggplot2)
+library(dplyr)
+
+# Load the airquality dataset
+data("airquality")
+```
+
+## a. Get the boxplot of Temp variable using ggplot2 package and interpret it carefully.
+```{r}
+ggplot(airquality,
+       aes(y = Temp)) + 
+  geom_boxplot(fill = "skyblue") + 
+  labs(title = "Boxplot of Temperature",
+       y = "Temperature (°F)") +
+  theme_minimal()
+
+# Interpretation:
+# The boxplot shows the distribution of the temperature variable. 
+# The median temperature is represented by the thick line inside the box
+# which is around 79(°F).
+# The interquartile range (IQR) is shown by the height of the box,
+# which represents the middle 50% of the data.
+# The "whiskers" extend to 1.5 times the IQR from the quartiles.
+# Any points outside the whiskers are considered outliers.
+```
+
+## b. Create class intervals of Temp variable using dplyr package and show it as frequency distribution.
+```{r}
+airquality <- airquality %>% 
+  mutate(TempClass = cut(Temp,
+                         breaks = seq(min(Temp),
+                                      max(Temp),
+                                      by = 5)))
+
+temp_freq <- airquality %>%
+  group_by(TempClass) %>%
+  summarise(Frequency = n())
+
+print(temp_freq)
+```
+
+## c. Get pie chart of Temp variable class intervals using ggplot2 package and interpret it carefully.
+```{r}
+ggplot(temp_freq,
+       aes(x = "",
+           y = Frequency,
+           fill = TempClass)) +
+  geom_bar(stat = "identity",
+           width = 1) +
+  coord_polar("y") +
+  labs(title = "Pie Chart of Temperature Class Intervals",
+       y = "Frequency",
+       fill = "Temperature Class") +
+  theme_minimal()
+
+# Interpretation:
+# The pie chart displays the distribution of temperature class intervals.
+# Each slice represents a temperature class interval and its relative frequency.
+# The size of each slice corresponds to the frequency of observations within that interval.
+```
+
+## d. Get scatterplot of corrected Temp and Wind variables using ggplot2 package and interpret it carefully.
+```{r}
+ggplot(airquality,
+       aes(x = Wind,
+           y = Temp)) +
+  geom_point(color = "blue") +
+  geom_smooth(method = "lm",
+              se = FALSE,
+              color = "red") +
+  labs(title = "Scatterplot of Temperature vs Wind",
+       x = "Wind (mph)",
+       y = "Temperature (°F)") +
+  theme_minimal()
+
+# Interpretation:
+# The scatterplot shows the relationship between temperature and wind speed.
+# Each point represents a day's observation.
+# The red line is a linear regression line that shows the trend between wind speed and temperature.
+# There seems to be a negative relationship,
+# indicating that higher wind speeds are associated with lower temperatures.
+```
