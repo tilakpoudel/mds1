@@ -1,0 +1,271 @@
+---
+title: "Qn6 - 9"
+author: "Tilak Poudel"
+date: "2025-04-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Q.6
+
+## a. Define integers from 1 to 15 using three diffrent coding approaches in R
+### 1. Using the colon operator
+``` {r}
+R <- 1:15
+R
+```
+
+### 2. Using the seq() function
+
+```{r}
+R <- seq(1, 15)
+R
+```
+
+### 3. Using the c() function
+```{r}
+R <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+R
+```
+
+## b Add these five numbers 1.1, 2.2, 3.3, 4.4, and 5.5 and save it as column vector
+
+```{r}
+numbers <- c(1.1, 2.2, 3.3, 4.4, 5.5)
+N <- sum(numbers)
+N
+```
+
+
+## c Add subtract , multiply divide vector R from vector N
+```{r}
+R_add <- R + N
+R_add
+
+R_sub <- R - N
+R_sub
+
+R_mul <- R * N
+R_mul
+
+R_div <- R / N
+R_div
+
+```
+
+### d Define list
+```{r}
+L <- list("This", "is", "my", "first", "programming", "in", "R")
+L
+```
+
+# Q.7  Import airquality dataset as dq object in R and do the following
+## a. check the structure of the dataset and explain class of each variable
+```{r}
+aq <- airquality
+aq
+str(aq)
+```
+There are 153 observations and 6 variables in the dataset. The variables are:
+- Ozone: numeric
+- Solar.R: numeric
+- Wind: numeric
+- Temp: numeric
+- Month: integer
+- Day: integer
+
+## b. Explain how to handle missing values of two variables aq
+```{r}
+# check missing values
+is.na(aq)
+
+## Ozone and Solar.R has missing value, handle missing value filling with mean
+aq$Ozone[is.na(aq$Ozone)] <- mean(aq$Ozone, na.rm = TRUE)
+aq$Solar.R[is.na(aq$Solar.R)] <- mean(aq$Solar.R, na.rm = TRUE)
+aq
+```
+
+## c. Get the summary of all the variables and interpet the,
+```{r}
+    summary(aq)
+```
+The following is the summary (minimum, 1st quarter, median, mean 3rd quartle, max) for each variable with 
+Ozone           Solar.R           Wind             Temp      
+ Min.   :  1.00   Min.   :  7.0   Min.   : 1.700   Min.   :56.00  
+ 1st Qu.: 21.00   1st Qu.:120.0   1st Qu.: 7.400   1st Qu.:72.00  
+ Median : 42.13   Median :194.0   Median : 9.700   Median :79.00  
+ Mean   : 42.13   Mean   :185.9   Mean   : 9.958   Mean   :77.88  
+ 3rd Qu.: 46.00   3rd Qu.:256.0   3rd Qu.:11.500   3rd Qu.:85.00  
+ Max.   :168.00   Max.   :334.0   Max.   :20.700   Max.   :97.00  
+
+Month            Day      
+ Min.   :5.000   Min.   : 1.0  
+ 1st Qu.:6.000   1st Qu.: 8.0  
+ Median :7.000   Median :16.0  
+ Mean   :6.993   Mean   :15.8  
+ 3rd Qu.:8.000   3rd Qu.:23.0  
+ Max.   :9.000   Max.   :31.0 
+
+## d. Get the summary statistics of temp variable by month categories and interpret
+
+```{r}
+summary(aq$Temp, aq$Month)
+```
+The following is the interpretation of temp by month
+ Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  56.00   72.00   79.00   77.88   85.00   97.00 
+
+The minimum temp is 56 , max as 97 , 79 is the median and 77.88 as mean.
+
+
+# QN 8. 
+## a. Create a bar plot of Month variable and interpret 
+```{r}
+barplot(table(aq$Month), 
+  main = "Bar plot of Month", 
+  xlab = "Month", 
+  ylab = "Frequency", 
+  col = "blue")
+```
+### Interpretation
+  - The bar plot shows the frequency of each month in the dataset.
+  - The month with the highest frequency is 7, followed by 5 and 8. 
+  - The month with the lowest frequency is 6 and 9.
+
+## b. Create a histogram of Temp variable and interpret
+```{r}
+hist(aq$Temp, 
+  main = "Histogram of Temp", 
+  xlab = "Temperature", 
+  ylab = "Frequency", 
+  col = "green"
+)
+```
+Interpretation,
+- - The histogram shows the distribution of temperature values in the dataset.
+- The temperature values are concentrated around 75 to 85 degrees, with a peak around 75 degrees.
+- The distribution is slightly right-skewed, indicating that there are some higher temperature values.
+- The histogram has a normal distribution shape, indicating that the temperature values are normally distributed.
+
+## c. Create line plot of Temp and Day and interpet
+```{r}
+plot(aq$Day, aq$Temp, 
+  type = "l", 
+  main = "Line plot of Temp and Day", 
+  xlab = "Day", 
+  ylab = "Temperature", 
+  col = "red"
+)
+```
+### Interpretation
+- The line plot shows the relationship between temperature and day.
+- The temperature values increase from day 1 to day 31, with some fluctuations in between.
+- The line plot doesnot distinctlively indicate the correlation.
+
+## d. Create a scatter plot of Ozone and Solar and interpret
+```{r}
+plot(aq$Ozone, aq$Solar.R, 
+  main = "Scatter plot of Ozone and Solar", 
+  xlab = "Ozone", 
+  ylab = "Solar", 
+  col = "purple"
+)
+```
+### Interpretation
+- The scatter plot shows the relationship between ozone and solar radiation.  
+- There is a positive correlation between ozone and solar radiation, indicating that as ozone levels increase, solar radiation also increases.
+- The scatter plot also shows some outliers, indicating that there are some extreme values in the dataset.
+
+# QN 9.Do the following with tidyverse package
+### a. Define tibble having country, year, cases and population with 20 random values in each
+```{r}
+#library(tidyverse)
+library(tibble)
+set.seed(39)
+country <- sample(c("USA", "India", "China", "Brazil", "UK"), 20, replace = TRUE)
+year <- sample(2000:2020, 20, replace = TRUE)
+cases <- sample(1000:10000, 20, replace = TRUE)
+population <- sample(1000000:10000000, 20, replace = TRUE)
+tibble_data <- tibble(country, year, cases, population)
+tibble_data
+```
+
+### b. Transform the cases as log of cases(LnCase) and population as log of population(LnPop)
+```{r}
+library(dplyr)
+tibble_data <- tibble_data %>%
+  filter(cases > 0, population > 0) %>%  # Remove non-positive values
+  mutate(LnCase = log(cases), 
+         LnPop = log(population))
+tibble_data
+```
+
+### c. Create a scatter plot of 
+#### c1. cases and population
+
+```{r}
+plot(tibble_data$cases, tibble_data$population, 
+     main = "Scatter plot of Cases and Population", 
+     xlab = "Cases", 
+     ylab = "Population", 
+     col = "blue")
+```
+
+#### c2. LnCase and population
+```{r}
+plot(tibble_data$LnCase, tibble_data$population, 
+     main = "Scatter plot of LnCase and Population", 
+     xlab = "LnCase", 
+     ylab = "Population", 
+     col = "red")
+```
+# Error: attempt to use zero-length variable name
+
+#### c3. cases and LnPop
+```{r}
+  plot(tibble_data$cases, tibble_data$LnPop, 
+      main = "Scatter plot of Case and LNPopulation", 
+      xlab = "Cases", 
+      ylab = "Population", 
+      col = "blue")
+```
+
+#### c4. LnCase and LnPop
+```{r}
+    plot(tibble_data$LnCase, tibble_data$LnPop, 
+      main = "Scatter plot of Case and LNPopulation", 
+      xlab = "Cases", 
+      ylab = "Population", 
+      col = "blue")
+```
+  
+### d. Show four graphs in a single graph window
+```{r}
+#Creat a window for graphs in 2 rows and 2 columns
+par(mfrow = c(2, 2))
+plot(tibble_data$cases, tibble_data$population, 
+     main = "Scatter plot of Cases and Population", 
+     xlab = "Cases", 
+     ylab = "Population", 
+     col = "blue")
+plot(tibble_data$LnCase, tibble_data$population, 
+     main = "Scatter plot of LnCase and Population", 
+     xlab = "LnCase", 
+     ylab = "Population", 
+     col = "red")
+  plot(tibble_data$cases, tibble_data$LnPop, 
+     main = "Scatter plot of Case and LNPopulation", 
+     xlab = "Cases", 
+     ylab = "Population", 
+     col = "green")
+  plot(tibble_data$LnCase, tibble_data$LnPop, 
+     main = "Scatter plot of Case and LNPopulation", 
+     xlab = "Cases", 
+     ylab = "Population", 
+     col = "purple")
+# Graph is default mode
+# par(mfrow = c(1, 1))
+```

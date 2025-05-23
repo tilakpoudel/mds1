@@ -1,0 +1,141 @@
+---
+title: "39_Project3_Part1"
+author: "Tilak Poudel"
+date: "2025-04-19"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Part 1: Use “airquality” data of R and locate median and mode of “Temp” variable graphically.
+Validate the value of median and mode obtained from graph with median and mode functions in R.
+Which summary measure (average and dispersion) must be used for "Wind" and "Temp" variables? 
+Why: Justify your decision with graphs and tests.
+
+```{r graphs}
+
+# Load the airquality dataset
+data <- airquality
+# Check the structure of the dataset
+str(data)
+# Check the first few rows of the dataset
+head(data)
+# Check the summary of the dataset
+summary(data)
+# Check the names of the columns in the dataset
+names(data)
+# Check the number of rows and columns in the dataset
+dim(data)
+# Check the number of missing values in each column
+colSums(is.na(data))
+# Check the number of missing values in the "Temp" column
+sum(is.na(data$Temp))
+# Check the number of missing values in the "Wind" column
+sum(is.na(data$Wind))
+
+data$Temp
+data$Temp <- as.numeric(data$Temp)
+class(data$Temp)
+# Check the summary of the "Temp" variable
+summary(data$Temp)
+# create breaks using min and max values
+breaks <- seq(55, 100, by = 5)
+breaks
+# Create a histogram of the "Temp" variable
+hist(data$Temp, 
+     main = "Histogram of Temperature", 
+     xlab = "Temperature", 
+     ylab = "Frequency", 
+     col = "lightblue", 
+     border = "black", 
+     breaks = breaks
+)
+# Add a vertical line for the median
+abline(v = median(data$Temp, na.rm = TRUE), col = "red", lwd = 2, lty = 2)
+
+# validate the value of median obtained from graph with median function in R
+median(data$Temp, na.rm = TRUE)
+```
+Here we can see that the median value of the "Temp" variable is 79, which is 
+the same as the value obtained from the histogram.
+
+# Locate mode of the temp variable
+
+```{r histogram}
+# create frequency table
+temp_freq <- table(data$Temp)
+
+# Find the value with highest frequency
+mode_temp <- as.numeric(names(temp_freq)[which.max(temp_freq)])
+mode_temp
+
+# Plot the histogram with mode value
+hist(data$Temp, 
+     main = "Histogram of Temperature with median and mode", 
+     xlab = "Temperature", 
+     ylab = "Frequency", 
+     col = "lightblue", 
+     border = "black", 
+     breaks = breaks
+)
+
+# Add a vertical line for the mode
+abline(v = mode_temp, col = "green", lwd = 2, lty = 2)
+abline(v = median(data$Temp, na.rm = TRUE), col = "red", lwd = 2, lty = 2)
+
+# Add a legend
+legend("topright", 
+       legend = c("Median", "Mode"), 
+       col = c("red", "green"), 
+       lty = 2, 
+       lwd = 2
+)
+
+# validate the value of mode obtained from graph with mode function in R
+mode_temp
+
+```
+We can see that the mode value of the "Temp" variable is 81, which is
+the same as the value obtained from the histogram.
+
+## Apply appropriate tests to determine the average and dispersion measures for "Wind" and "Temp" variables
+```{r justification}
+# Check the distribution of the "Wind" variable
+# plot the scatter plot of "Wind" variable
+hist(data$Wind, 
+     main = "Histogram of Wind", 
+     xlab = "Wind", 
+     ylab = "Frequency", 
+     col = "lightblue", 
+     border = "black"
+)
+
+```
+From the graph, we can see that the "Wind" variable seems to be normally distributed. Lets apply shapiro-wilk test to check the normality of the data.
+```{r shapiro_test}
+# Shapiro-Wilk test for normality
+shapiro_test_wind <- shapiro.test(data$Wind)
+shapiro_test_wind
+```
+The p-value is greater than 0.05, which indicates that we fail to reject the null hypothesis and conclude that the "Wind" variable is normally distributed. So we can use mean and standard deviation as the average and dispersion measures for the "Wind" variable.
+
+## Now lets check the distribution of the "Temp" variable
+```{r temp_justification}
+# Check the distribution of the "Temp" variable
+hist(data$Temp, 
+     main = "Histogram of Temperature", 
+     xlab = "Temperature", 
+     ylab = "Frequency", 
+     col = "lightblue",
+     border = "black"
+)
+```
+From the graph, we can see that the "Temp" variable seems to be normally distributed. Lets apply shapiro-wilk test to check the normality of the data.
+```{r shapiro_test_temp}
+# Shapiro-Wilk test for normality
+shapiro_test_temp <- shapiro.test(data$Temp)
+shapiro_test_temp
+```
+The p-value is less than 0.05, which indicates that we reject the null hypothesis and conclude that the "Temp" variable is not normally distributed. So we can use median and inter-quartile range as the average and dispersion measures for the "Temp" variable.

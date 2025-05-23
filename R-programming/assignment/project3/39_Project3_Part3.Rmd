@@ -1,0 +1,104 @@
+---
+title: "39_Project3_Part3"
+author: "Tilak Poudel"
+date: "2025-04-19"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Use "mpg" data of ggplot2 library and test the hypothesis that large engine cars (displ) 
+have less highway milage (hwy) using scatterplot (geom_point) for overall plot 
+and subcategories of disp variable with ggplot2 package. Then, perform smoothing 
+on this scatterplot and explain the algorithm/method used to do smoothing by the 
+ggplot2 package. Finally, use facet wrap and facet grid layers to show scatterplots
+for cyl and drv variables in ggplot2 and explain the results carefully.
+
+```{r}
+library(ggplot2)
+
+data(mpg)
+# Check the structure of the dataset
+str(mpg)
+# Check the first few rows of the dataset
+head(mpg)
+
+```
+## Hypothesis testing
+Hypothesis: Large engine cars (displ) have less highway mileage (hwy)
+
+- Null Hypothesis (H0): There is no relationship between engine size (displ) and highway mileage (hwy).
+- Alternative Hypothesis (H1): There is a negative relationship between engine size (displ) and highway mileage (hwy).
+
+```{r scatterplot}
+# Scatter plot of displ vs hwy
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  labs(title = "Scatterplot of Engine Size(displ) vs Highway Mileage (hwy))",
+       x = "Engine Size (displ)",
+       y = "Highway Mileage (hwy)") +
+  theme_minimal()
+```
+We observe a negative correlation — as `displ` increases, 
+`hwy` tends to decrease. `This supports the hypothesis that larger engines have lower fuel efficiency.`
+
+## Plot the scatter plot with subcategories of displ
+```{r scatterplot_subcategories}
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_point(aes(color = factor(cyl))) +
+  labs(title = "Scatterplot of Engine Size(displ) vs Highway Mileage (hwy) by Number of Cylinders",
+       x = "Engine Size (displ)",
+       y = "Highway Mileage (hwy)",
+       color = "Number of Cylinders")
+```
+The scatter plot shows that cars with more cylinders (`cyl`) tend to have larger engine sizes (`displ`) and lower highway mileage (`hwy`).
+
+## Smoothing
+```{r smoothing}
+# Smoothing using geom_smooth
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_point(alpha=0.6) +
+  geom_smooth(method = "loess", se = TRUE, color = "blue") +
+  labs(title = "Scatterplot with Smoothing (Loess)",
+       x = "Engine Size (displ)",
+       y = "Highway Mileage (hwy)") +
+  theme_minimal()
+```
+The `geom_smooth` function in ggplot2 uses a method called LOESS (Locally Estimated Scatterplot Smoothing) by default.LOESS is a non-parametric regression method that fits multiple regressions in localized subsets of the data. It is particularly useful for capturing non-linear relationships in scatterplots. 
+
+- The blue line represents the smoothed relationship between `displ` and `hwy`.
+- The shaded area around the line represents the confidence interval for the smoothed line.
+
+## Facet Wrap
+```{r facet_wrap}
+# Facet wrap for cyl variable
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_wrap(~ cyl) +
+  labs(title = "Scatterplot with Smoothing by Number of Cylinders",
+       x = "Engine Size (displ)",
+       y = "Highway Mileage (hwy)") +
+  theme_minimal()
+```
+The facet wrap creates separate scatterplots for each level of the `cyl` variable. This allows us to see how the relationship between `displ` and `hwy` varies with the number of cylinders.
+
+- The vechiles with less than 4 cylinders have higher hwy mileage while vechile with 8 cylinders have the least hwy mileage. Vechiles with 6 cylinders have moderate hwy mileage.
+
+## Facet Grid
+```{r facet_grid}
+# Facet grid for cyl and drv variables
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_grid(drv ~ cyl) +
+  labs(title = "Scatterplot with Smoothing by Number of Cylinders and Drive Type",
+       x = "Engine Size (displ)",
+       y = "Highway Mileage (hwy)") +
+  theme_minimal()
+```
+The facet grid creates a grid of scatterplots based on the `cyl` and `drv` variables. This allows us to see how the relationship between `displ` and `hwy` varies with both the number of cylinders and the drive type.
+
+- The scatterplots show that the relationship between `displ` and `hwy` is similar across different drive types (fwd, rwd, 4wd),but the overall trend is that larger engines (`displ`) tend to have lower highway mileage (`hwy`).
+
+- Conclusion: The analysis shows that larger engine cars tend to have lower highway mileage.
