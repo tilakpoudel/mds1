@@ -1,0 +1,928 @@
+---
+title: "39_Project1"
+author: "Tilak Poudel"
+date: "2025-03-09"
+output: html_document
+---
+
+## Session 1 & 2
+
+Example_1
+Column vector
+```{r}
+data<-c(1,2,3,4,5,6,7,8,9)
+data
+text<-c("a","b","c","d","e","f","g","h","i")
+text
+data2<-cbind(data,text)
+data2
+```
+
+Example_2
+
+Matrix contains in 2 dimensions in table like structure
+```{r}
+M<-matrix(
+  c(1:9), nrow = 3, ncol = 3, byrow = TRUE
+)
+print(M)
+```
+
+Example_3
+```{r}
+V<-c(1:12)
+MDA<-array(V,dim = c(2,3,2))
+print(MDA)
+```
+
+## Data frames in R
+### Creating data frame in R.
+
+```{r}
+df <- data.frame(x=c(1,2,3), y=c(10,20,30), z=c(30,45,50))
+df
+
+class(df)
+```
+
+Create a data frame
+
+```{r}
+emp.data <- data.frame(
+  emp_id = c(1:5),
+  emp_name =c("Rick", "Dan", "Michelle", "Ryan", "Gary"),
+  salary = c(623.3, 515.2, 611.0, 729.0, 845.25),
+  start_date = as.Date(c("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11", "2015-03-27")),
+  stringsAsFactors = FALSE
+)
+
+# print the data
+print(emp.data)
+
+# Get the structure of the data frame.
+str(emp.data)
+
+# Print the summary
+print(summary(emp.data))
+
+# Extract part of data from data frame
+# Extract emp_name and salary
+result <- data.frame(emp.data$emp_name, emp.data$salary)
+print(result)
+
+# Extract first two rows
+result1 <- emp.data[1:2, ]
+print(result1)
+
+# Extract 3rd and 5th row with 2nd and 4th column
+result <- emp.data[c(3,5), c(2,4)]
+print(result)
+
+# Add new column in existing data frame
+# Add "dept" column
+emp.data$dept <- c("IT", "HR", "Finance", "Operations", "IT")
+v <- emp.data
+
+print(v)
+
+# Expand data frame in R (Adding cases)
+# Create a new data frame
+emp.newdata <- data.frame(
+  emp_id = c(6:8),
+  emp_name =c("Ram", "Shyam", "Mohan"),
+  salary = c(923.3, 715.2, 681.0),
+  start_date = as.Date(c("2014-01-01", "2013-07-20", "2014-11-25")),
+  dept = c("HR", "IT", "Finance"),
+  stringsAsFactors = FALSE
+)
+
+print(emp.newdata)
+
+# Expand(Combine) data frame using rbind 
+# Bind the tow data frames
+emp.finaldata <- rbind(emp.data, emp.newdata)
+print(emp.finaldata)
+```
+
+## Import data in R
+```{r}
+
+# load necessary libraries
+library(magrittr)
+
+# Read csv file
+covid_nep_data = read.csv('../data/covnep_252days.csv')
+
+print(str(covid_nep_data))
+
+print(head(covid_nep_data))
+
+print(summary(covid_nep_data))
+```
+Importing COVID data in Text Files
+```{r}
+y<-read.csv("../data/covnep_252days.csv")
+head(y)
+```
+Importing data into Excel files
+```{r}
+library(readxl)
+covid_data_xls <- readxl::read_excel("../data/covnep_252days.xlsx")
+tail(covid_data_xls)
+```
+
+## Session 3
+### Basics of R
+#### PEMDAS Rule in R
+```{r}
+s<-(4+6)^2*5/10+9-1
+print(s)
+```
+
+#### Data types in R
+
+1) Integer data type
+```{r}
+x<-c(1,2,3,4,5,6,7,8,9)
+class(x)
+```
+
+```{r}
+y<-c(1L,2L,3L,4L,5L,6L,7L,8L,9L)
+print(y)
+class(y)
+```
+
+R promotes integer to numeric when needed
+
+(Multiplying integer by numeric)
+```{r}
+z<-4L*2.8
+print(z)
+```
+
+Dividing integer by integer will give numeric
+```{r}
+b<-5L/2L
+print(b)
+```
+
+Data_Types_In_R
+1) Character
+```{r}
+x<-"data"
+print(x)
+class(x)
+```
+
+2)Factor
+```{r}
+y<-factor("data")
+print(y)
+class(y)
+```
+Factor and attributes in R
+```{r}
+gender<-factor(c("male","female","female","male"))
+typeof(gender)
+attributes(gender)
+```
+
+```{r}
+unclass(gender)
+```
+Data_Types
+
+Date: To store Date
+```{r}
+date1<-as.Date("2025-03-09")
+date1
+```
+
+```{r}
+class(date1)
+```
+POSIXct:To store date and time
+
+```{r}
+date2<-as.POSIXct("2025-03-09 12:57")
+date2
+```
+
+```{r}
+class(date2)
+
+```
+Logical_Data_Types
+
+```{r}
+x<- 2 == 3
+x
+```
+
+```{r}
+2!=3
+```
+
+```{r}
+2<3
+```
+
+```{r}
+2<=3
+```
+
+```{r}
+2>3
+```
+
+```{r}
+2>=3
+```
+
+```{r}
+"data" == "stats"
+```
+
+```{r}
+"data" < "stats"
+```
+The number of characters are euqal so true.
+```{r}
+"hari" == "hare"
+```
+#### Vector operation in R(multiplication by a scalar)
+```{r}
+x1<-c(1,2,3,4,5,6,7,8,9)
+y<-x1*3
+y
+```
+Addition with Scalar
+```{r}
+z<-x1+2
+z
+```
+Subtraction With Scalar
+```{r}
+d<-x1-2
+d
+```
+Square root 
+```{r}
+e<-sqrt(x1)
+e
+```
+Extending vector operation in R
+(Two vectors of equal length)
+```{r}
+x<-1:10
+y<- -5:4
+length(x)
+```
+
+```{r}
+length(y)
+```
+Addition
+```{r}
+x+y
+```
+Subtraction
+```{r}
+x-y
+```
+Multiplication
+```{r}
+x*y
+```
+Division
+
+```{r}
+x/y
+```
+Power
+```{r}
+x^y
+```
+Addition of both length
+```{r}
+length(x+y)
+```
+Two vector of unequal length
+(Addition)
+```{r}
+x<-1:10
+z<-c(1,2)
+x+z
+```
+Accessing individual elements in R
+
+```{r}
+x[1]
+```
+
+```{r}
+x[c(1,4)]
+```
+Creation and giving name to a Vector
+```{r}
+w1<-1:3
+names(w1)<-c("a", "b", "c")
+w1
+```
+
+#### Missing data in R (NA Type)
+```{r}
+zchar<-c("Hockey", NA, "Cricket")
+is.na(zchar)
+```
+
+```{r}
+nchar(zchar)
+```
+Calculating mean of missing Data
+```{r}
+z<-c(1,2,NA,8,3,NA,3)
+mean(z)
+```
+Removing NA and  calculating mean
+```{r}
+mean(z, na.rm = TRUE)
+```
+Calculating variance excluding NA 
+```{r}
+var(z, na.rm = TRUE)
+```
+NULL type missing in R
+```{r}
+z<-c(1, NULL, 3)
+z
+```
+
+```{r}
+is.null(z)
+```
+
+```{r}
+f<-NULL
+is.null(f)
+```
+
+#### Pipes in R
+```{r}
+x<-1:10
+mean(x)
+```
+With pipe operator(%>%)
+```{r}
+library(magrittr)
+x%>%mean
+```
+
+```{r}
+z<-c(1,2,NA,8,3,NA,3)
+sum(is.na(z))
+```
+Pipes without nesting 
+```{r}
+z %>% is.na %>% sum
+```
+Additional argument
+
+```{r}
+z %>% mean(na.rm = TRUE)
+```
+
+### Advanced Data Structure In R
+(Data Frame)
+
+```{r}
+x<-10:1
+y<- -4:5
+q<-c("Hockey","Football","Baseball","Kabaddi","Rugby","Pingpong","Basketball","Tennis","Cricket","Volleyball")
+sportsDF<-data.frame(x,y,q)
+sportsDF
+
+```
+
+Naming data frame
+```{r}
+sportsDF<-data.frame(First =x, Second = y, Sport = q)
+sportsDF
+```
+Accessing column
+```{r}
+names(sportsDF)[3]
+```
+
+```{r}
+rownames(sportsDF)
+```
+
+```{r}
+rownames(sportsDF)<-c("One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten")
+sportsDF
+```
+Printing first few Rows
+```{r}
+head(sportsDF)
+```
+
+Printing last few rows
+```{r}
+tail(sportsDF)
+```
+Printing first seven rows
+```{r}
+head(sportsDF, n =7)
+```
+Accessing value from third row and second column
+```{r}
+sportsDF[3,2]
+```
+Accessing from Third column
+
+```{r}
+sportsDF[,3]
+```
+
+```{r}
+sportsDF[,c("First","Sport")]
+```
+
+```{r}
+sportsDF[,"Sport",drop = FALSE]
+```
+#### Lists in R
+```{r}
+list1<-list(1,2,3)
+list1
+```
+Single element list
+```{r}
+list2<-list(c(1,2,3))
+list2
+```
+
+```{r}
+list3<-list(c(1,2,3),3:7)
+list3
+```
+List with data frame and vector
+```{r}
+list4<-list(sportsDF,1:10)
+list4
+```
+
+```{r}
+list5<-list(sportsDF,1:10,list3)
+list5
+```
+
+```{r}
+names(list5)
+```
+Naming the first as data frame , second as vector and the third as list
+```{r}
+names(list5)<-c("dataframe","vector","list")
+list5
+```
+Accessing elements of list
+It returns the first element i.e data frame
+```{r}
+list5[[1]]
+```
+Alternativley, we can access by its name as well
+```{r}
+list5[["dataframe"]]
+```
+Accessed element manipulation
+```{r}
+list5[[1]]$Sport #Sport variable
+list5[[1]][, "Second"]
+list5[[1]][, "Second", drop=F]
+length(list5)
+```
+Adding new element
+```{r}
+list5[[4]] <- 2
+list5[["NewElement"]] <-3:6
+print(names(list5))
+print(list5)
+
+```
+### Matrices in R
+Performing matrix operations
+```{r}
+A <- matrix(1:10, nrow=5)
+B <- matrix(21:30, nrow=5)
+C <- matrix(21:40, nrow=2)
+
+row(A)
+ncol(B)
+dim(C)
+
+A + B
+A * B
+A - B
+A = B
+```
+### Arrays in R
+```{r}
+theArray <- array(1:12, dim=c(2,3,2))
+theArray
+
+theArray [1, , ] # 1st row of both
+theArray[1, ,1] # 1st row of first
+theArray[,1,] #1st column of both
+```
+## Session 4
+```{r}
+#Column vector
+x <- c(1:30)
+y <- x^3
+plot(x,y)
+```
+
+The graph for the plot is exponential.
+
+R script examples
+```{r}
+#store the current directory
+initial.dir <- getwd()
+
+#change to new directory
+setwd("~/projects/tilak/mds1/R-programming")
+
+# load necessary libraries
+library(magrittr)
+
+# set the output file (it will bypass R and Rstudio)
+sink("result.out")
+
+# load the data set from the folder
+iris <- read.csv("data/iris-data.csv")
+colnames(iris)
+
+# result will appear in the output file
+summary(iris)
+cor(iris$Sepal.Length, iris$Sepal.Width)
+
+#Close the output file
+sink()
+
+# unload the libraries
+detach("package:magrittr")
+
+# change back to original directory
+setwd(initial.dir)
+
+```
+
+### Tee Operator
+```{r}
+# load necessary libraries
+library(magrittr)
+
+set.seed(123)
+# set 200 random normal distribution data
+mat <- rnorm(200) %>% matrix(ncol = 2)
+
+# Plot the matrix
+plot(mat)
+
+# Compute column sums separately
+colSums(mat)
+
+# use of tee pipe operator
+set.seed(123)
+# set 200 random normal distribution data
+rnorm(200) %>%
+  matrix(ncol = 2) %T>%
+  plot %>%
+  colSums
+```
+## Get data from the internet
+```{r}
+# load data from internet
+iris <- read.csv(
+  url("http://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"),
+  header=FALSE)
+head(iris)
+
+# Add columns names for V,V2,V3,V4 nd V5 columns to the iris data
+names(iris) <- c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species")
+
+# See the new column name
+head(iris)
+
+# Save the iris data from internet in local computer (includes row names)
+write.csv(iris, "~/projects/tilak/mds1/R-programming/data/iris-new.csv")
+iris_new <- read.csv('~/projects/tilak/mds1/R-programming/data/iris-new.csv')
+head(iris_new) # it has extra column for row name
+
+# Save the iris data in local machine (excludes row names)
+write.csv(
+  iris,
+  "~/projects/tilak/mds1/R-programming/data/iris-data.csv", 
+  row.names = FALSE
+)
+
+iris_data <- read.csv('~/projects/tilak/mds1/R-programming/data/iris-data.csv')
+head(iris_data)  # it has extra column for row name
+
+# Convert the wide format data into long format
+library(reshape2)
+
+# Convert iris data set to long format using the melt function
+iris_long <- melt(iris, 
+                  id.vars = "Species", 
+                  variable.name = "Measurement", 
+                  value.name = "Value")
+head(iris_long)
+
+# save the iris_long data in the working directory
+write.csv(iris_long, "iris_long1.csv", row.names = FALSE)
+
+# save the iris_long data in custom directory
+write.csv(iris_long, "~/projects/tilak/mds1/R-programming/data/iris_long1.csv", row.names = FALSE)
+
+```
+## Session 5
+### Bulit in function in R
+```{r}
+# round()
+x <- round(3.1415)
+print(x)  
+# Output: 3  (Default rounding, no decimal places)
+
+# round()
+round(3.1415, digits = 2)  
+# Output: 3.14 (Rounded to 2 decimal places)
+
+# factorial()
+factorial(3)  
+# Output: 6  (3! = 3 × 2 × 1)
+
+# factorial()
+factorial(2*3)  
+# Output: 720  (factorial(6) = 6! = 6 × 5 × 4 × 3 × 2 × 1)
+
+# mean()
+mean(1:6)  
+# Output: 3.5  (Average of numbers 1, 2, 3, 4, 5, 6 → (1+2+3+4+5+6)/6)
+
+# mean()
+mean(c(1:30))  
+# Output: 15.5  (Average of numbers 1 to 30 → (1+2+...+30)/30)
+```
+### Sample
+```{r}
+# The sample() function in R is used for random sampling from a given vector.
+
+# Define a die with values 1 to 6
+die <- 1:6  
+
+# 1. Randomly pick one value (without replacement)
+sample(x = die, size = 1)  
+
+# 2. Another random pick (without replacement)
+sample(x = die, size = 1)  
+
+# 3. Randomly pick one value (with replacement - same as default here)
+sample(x = die, size = 1, replace = TRUE)  
+
+# 4. Randomly pick two values (without replacement)
+sample(x = die, size = 2)  
+
+# 6. Randomly pick two values (with replacement, allowing duplicates)
+sample(x = die, size = 2, replace = TRUE)  
+
+```
+### Sample function to split the train and test data
+```{r}
+# Load the iris data set from a CSV file
+iris <- read.csv("../data/iris.csv")
+
+# Set a seed for reproducibility (ensures the same random split every time)
+set.seed(123)
+
+# Create a logical vector for 70:30 train-test split
+# TRUE (70% of rows) → Train set, FALSE (30% of rows) → Test set
+tt.sample <- sample(c(TRUE, FALSE), nrow(iris), replace = TRUE, prob = c(0.7, 0.3))
+
+# Subset iris data set into training (70%) and testing (30%) sets
+train <- iris[tt.sample, ]  # Training set
+test <- iris[!tt.sample, ]  # Testing set
+
+# Print data set sizes
+cat("Training Set Size:", nrow(train), "\n")
+cat("Testing Set Size:", nrow(test), "\n")
+```
+In the above code we,
+
+* Load data set: read.csv("iris.csv") loads the data set.
+* Set seed: Ensures the same random split each time you run the code.
+* Create a random logical vector (tt.sample) for selecting 70% train, 30% test.
+* Subset into train and test based on TRUE (train) and FALSE (test).
+* Print sizes of the train and test sets for verification.
+
+### User defined methods
+```{r}
+# define function
+roll <- function() {
+  die <- 1:6
+  # size = 2 => it means 2 dices are rolled
+  dice <- sample(die, size = 2, replace=TRUE)
+  
+  # get the sum of result of 2 dice
+  sum(dice)
+}
+# call function
+roll()
+roll()
+roll()
+
+# Function with default value
+roll2 <- function(die = 1:6) {
+  # size = 2 => it means 2 dices are rolled
+  dice <- sample(die, size = 2, replace=TRUE)
+  
+  # get the sum of result of 2 dice
+  sum(dice)
+}
+roll2()
+
+# with parameter
+roll3 <- function(dice) {
+  # size = 2 => it means 2 dices are rolled
+  dice <- sample(dice, size = 2, replace=TRUE)
+  
+  # get the sum of result of 2 dice
+  sum(dice)
+}
+
+roll3(dice = 1:6)
+roll3(dice = 1:12)
+roll3(dice = 1:24)
+```
+
+Functions work on string
+```{r}
+best_practice <- c("Let", "the", "computer", "do", "the", "work")
+
+print_words <- function(sentence) {
+  
+  print(sentence[1])
+  print(sentence[2])
+  print(sentence[3])
+  print(sentence[4])
+  print(sentence[5])
+  print(sentence[6])
+  
+}
+print_words(best_practice) # [1] ”Let” [1] “the” [1] “computer” [1] “do” [1] “the” [1] “work”
+print_words(best_practice[-6]) # [1] ”Let” [1] “the” [1] “computer” [1] “do” [1] “the” [1] “NA”
+best_practice[-6]
+
+```
+Here, 
+
+* best_practice[-6] removes the 6th element ("work"), leaving only 5 elements.
+* The function print_words() still expects 6 elements (sentence[6]), but since there's no 6th element, it prints NA.
+
+### Function with for loop
+```{r}
+best_practice <- c("Let", "the", "computer", "do", "the", "work")
+
+print_words <- function(sentence) {
+  for (word in sentence) {
+    print(word)
+  }
+}
+
+print_words(best_practice)       # Prints all words
+print_words(best_practice[-6])   # Prints first 5 words without NA
+```
+## Apply family
+
+* **apply()**
+The apply() function is used for applying a function over rows or columns of a matrix or data frame. It allows to apply a function along either rows (MARGIN = 1) or columns (MARGIN = 2).
+```{r}
+# Create a matrix
+mat <- matrix(1:9, nrow = 3, byrow = TRUE)
+
+print(mat)
+# Apply sum function across columns (MARGIN = 2)
+apply(mat, MARGIN = 2, FUN = sum)
+# Output: [1] 12 15 18
+
+# Apply sum function across rows (MARGIN = 1)
+apply(mat, MARGIN = 1, FUN = sum)
+# Output: [1] 6 15 24
+
+```
+
+* **lapply()**
+The lapply() function is used for applying a function over list or data frame columns and it always returns a list.
+
+Example: Apply the length function to each column of a data frame:
+```{r}
+# Create a data frame
+df <- data.frame(a = 1:3, b = letters[1:3])
+df
+# Apply length function to each column of df
+lapply(df, length)
+# Output: $a [1] 3  $b [1] 3
+```
+* **sapply()**
+The sapply() function is similar to lapply(), but it tries to simplify the result. It returns a vector or matrix instead of a list, when possible.
+
+Example: Apply the length function to each column of a data frame (result simplified to a vector):
+```{r}
+# Create a data frame
+df <- data.frame(a = 1:3, b = letters[1:3])
+
+# Apply length function to each column of df
+sapply(df, length)
+# Output: a b 
+#         3 3
+```
+
+* **vapply()**
+
+The vapply() function is similar to sapply(), but it requires you to specify the type of output we expect. This makes it more reliable because it ensures the result is consistent.
+
+Example: Apply length to each column and specify that the output should be an integer vector:
+```{r}
+# Create a data frame
+df <- data.frame(a = 1:3, b = letters[1:3])
+
+# Apply length function to each column and specify output type
+vapply(df, length, FUN.VALUE = integer(1))
+# Output: a b 
+#         3 3
+```
+
+## Conditions
+Example of usage of if, else if and else statement
+```{r}
+age <- 1:99
+
+check_age <- function(age) {
+  if (age <= 15) {
+    print("Children")
+  } else {
+    if (age <= 65) {
+      print("Working group")
+    } else {
+      print("Senior citizen")
+    }
+  }
+}
+
+check_age(10)
+check_age(52)
+check_age(70)
+```
+
+```{r}
+check_age1 <- function(age) {
+  if (age <= 15) {
+    print("Children")
+  } else if(age > 15 && age <= 65) {
+      print("Working group")
+  } else {
+    print("Senior citizen")
+  }
+}
+
+check_age1(101)
+check_age1(52)
+check_age1(70)
+```
+
+```{r}
+check_age12 <- function(age) {
+  result <- ifelse(
+    age<=15, "child", 
+    ifelse(
+      (age > 15 && age <= 65), "Working", "senior")
+    )
+  print(result)
+}
+
+check_age12(101)
+check_age12(52)
+check_age12(70)
+
+```
+
+### Creating binary values
+Here we split the data to Too low  or Too high or TRUE or FALSE based on the value of y.
+```{r}
+y <- 1:40
+ifelse(y<20, "Too low", "Too high")
+#It’s a logical as:
+ifelse(y<20, TRUE, FALSE)
+```

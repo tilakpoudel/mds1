@@ -1,4 +1,4 @@
-install.packages("rvest")
+#install.packages("rvest")
 library(rvest)
 
 simple <- read_html("https://dataquestio.github.io/web-scraping-pages/simple.html")

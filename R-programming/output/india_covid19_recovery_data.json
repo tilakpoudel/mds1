@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "year": "2019",
+      "number_of_cases": "",
+      "recovery_rate": ""
+    },
+    {
+      "year": "2020",
+      "number_of_cases": "400000",
+      "recovery_rate": "90"
+    },
+    {
+      "year": "2021",
+      "number_of_cases": "44501206",
+      "recovery_rate": "98"
+    }
+  ]
+}
