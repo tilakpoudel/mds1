@@ -1,0 +1,379 @@
+---
+title: "39_TilakPoudel 2nd Assessment"
+author: "Tilak Poudel"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "/home/tilak/projects/tilak/mds1/R-programming/exam/2nd-assessment/39_TilakPoudel")
+```
+
+# Q.N 6
+
+Create a dataset with following variables:
+age (20-59) years
+height (110-190) cm
+weight (40-90) kg
+with random 150 cases of each variable with random seed 39
+
+## a
+
+```{r question6}
+working_directory <- getwd()
+print(working_directory)
+# Change to the desired directory
+# setwd("~/projects/tilak/mds1/R-programming/")
+set.seed(39)
+# Generate the data
+data <- data.frame(
+  age = sample(20:59, 150, replace = TRUE),
+  height = sample(110:190, 150, replace = TRUE),
+  weight = sample(40:90, 150, replace = TRUE)
+)
+
+print(data)
+```
+
+# b compute the body mass index variable as : BMI = weight in kg / height in meter squared
+```{r question6b}
+data$BMI <- data$weight / (data$height / 100)^2
+print(head(data))
+
+```
+# c create a body mass index category variable as follows: <18, 18-24, 25-30, 30+ and label them as "underweight", "normal", "overweight", "obese" using dplyr package
+```{r question6c}
+library(dplyr)
+data <- data %>%
+  mutate(BMI_category = case_when(
+    BMI < 18 ~ "underweight",
+    BMI >= 18 & BMI < 25 ~ "normal",
+    BMI >= 25 & BMI < 30 ~ "overweight",
+    TRUE ~ "obese"
+  ))
+print(head(data))
+```
+# show percentage distribution of labelled BMI variable with pie chart using ggplot2 package
+```{r question6d}
+library(ggplot2)
+ggplot(data, aes(x = "", fill = BMI_category)) +
+  geom_bar(width = 1) +
+  coord_polar(theta = "y") +
+  labs(title = "BMI Category Distribution") +
+  theme_void() +
+  theme(legend.title = element_blank()) +
+  geom_text(stat = 'count', aes(label = scales::percent(..count../sum(..count..))), position = position_stack(vjust = 0.5))
+
+```
+From the pie chart we can see that the distribution of BMI categories is as follows:
+
+- Underweight: 13.3%
+- Normal: 19.3%
+- Overweight: 20.7%
+- Obese: 46.7%
+
+# Q.N 7
+## Using airquality dataset, do the following:
+### a. Perform notmality of "Temp" variable by each category of "Month" variable and interpret
+```{r question7}
+library(dplyr)
+data("airquality")
+print(head(airquality))
+
+# see category of Month variable
+print(unique(airquality$Month))
+
+shapiro_results <- airquality %>%
+  group_by(Month) %>%
+  summarise(
+    shapiro_p_value = shapiro.test(Temp)$p.value
+  )
+print(shapiro_results)
+
+```
+## Interpretation
+The Shapiro-Wilk test results indicate the following p-values for the "Temp" variable by each month:
+- May: 0.134
+- June: 583
+- July: 119
+- August: 368 
+- September: 0.183 
+
+For all months, Temp appears to follow a normal distribution (`p > 0.05`), so parametric tests (like t-tests or ANOVA) could be appropriate.
+
+# b. Perform test of equality of variance of "Temp" variable by each category of "Month" variable and interpret
+```{r question7b}
+library(car)
+# Perform Levene's test for equality of variance
+levene_results <- leveneTest(Temp ~ factor(Month), data = airquality)
+print(levene_results)
+
+```
+## Interpretation
+The Levene's test results indicate the following:
+- F-value: 2.584
+- p-value: 0.0394
+This suggests that there is a `significant difference in the variances of the "Temp" variable across different months` (`p < 0.05`). Therefore, we cannot assume equal variances for the "Temp" variable across the months.
+
+
+# c. Compare temp by month using best statistical test for this data and interpret
+Since the data is
+
+Data is approximately normal, but
+
+Variances are not equal, we will use ANOVA compare the means of "Temp" across different months.
+```{r question7c}
+# Perform ANOVA to compare "Temp" across different months
+anova_results <- aov(Temp ~ factor(Month), data = airquality)
+summary_anova <- summary(anova_results)
+print(summary_anova)
+
+```
+## Interpretation
+F-value = 39.85, and
+
+p-value < 2e-16, which is much less than 0.05.
+
+So we can say, there is a statistically significant difference in mean temperature across the five months (May to September).
+
+
+# d. Perform post-hoc test to find which month is different from which month
+```{r question7d}
+# Perform Tukey's HSD post-hoc test
+tukey_results <- TukeyHSD(anova_results)
+print(tukey_results)
+
+```
+
+## Interpretation
+The Tukey's HSD post-hoc test results indicate significant differences in mean temperature between several pairs of months. We can summarize the findings as follows:
+- May has the coolest temps compared to all other months — all comparisons with May show significant positive differences.
+
+- June, July, and August are warmer months, with July and August temperatures being very similar (not significantly different).
+
+- September temps drop compared to July and August (significant negative differences).
+
+- September and June temps are not significantly different.
+
+
+# Q.N 8
+Do the following:
+a. Create a dataset with 200 random cases, 1 random binary (1 and 0), variable four randon (cateogorical and contnuous) variable with seed of 39
+```{r question8}
+set.seed(39)
+data_8 <- data.frame(
+  binary_var = sample(0:1, 200, replace = TRUE),
+  categorical_var1 = sample(c("A", "B", "C"), 200, replace = TRUE),
+  categorical_var2 = sample(c("X", "Y"), 200, replace = TRUE),
+  continuous_var1 = rnorm(200, mean = 50, sd = 10),
+  continuous_var2 = rnorm(200, mean = 100, sd = 20)
+)
+print(head(data_8))
+
+```
+
+# b. Divide into train and test with 70:30 random split
+```{r question8b}
+library(caret)
+set.seed(39)
+# Create a random split of the data into training and testing sets
+train_index <- createDataPartition(data_8$binary_var, p = 0.7, list = FALSE)
+train_data <- data_8[train_index, ]
+test_data <- data_8[-train_index, ]
+print(dim(train_data))
+print(dim(test_data))
+
+```
+
+# c. Fit supervised logistic regression abd decission tree classification model on train data with binary variable as dependent variable and all other variables as independent variables
+```{r question8c}
+library(rpart)
+# Fit logistic regression model
+logistic_model <- glm(binary_var ~ ., data = train_data, family = binomial)
+print(summary(logistic_model))
+# Fit decision tree model
+decision_tree_model <- rpart(binary_var ~ ., data = train_data, method = "class")
+print(decision_tree_model)
+# Plot the decision tree
+plot(decision_tree_model)
+text(decision_tree_model, use.n = TRUE, all = TRUE, cex = 0.8)
+
+```
+# d. Predict the released variable in the test datasets using both model and interpret the results
+```{r question8d}
+# Predict using logistic regression model
+logistic_predictions <- predict(logistic_model, newdata = test_data, type = "response")
+# Convert probabilities to binary predictions
+logistic_predictions_binary <- ifelse(logistic_predictions > 0.5, 1, 0)
+# Predict using decision tree model
+decision_tree_predictions <- predict(decision_tree_model, newdata = test_data, type = "class")
+# Create a confusion matrix for logistic regression predictions
+logistic_confusion_matrix <- table(test_data$binary_var, logistic_predictions_binary)
+print(logistic_confusion_matrix)
+
+# use caret package to calculate accuracy
+library(caret)
+logistic_accuracy_caret <- confusionMatrix(as.factor(logistic_predictions_binary), as.factor(test_data$binary_var))
+print(logistic_accuracy_caret)
+decision_tree_accuracy_caret <- confusionMatrix(as.factor(decision_tree_predictions), as.factor(test_data$binary_var))
+print(decision_tree_accuracy_caret)
+
+```
+## Interpretation
+The logistic regression model achieved an `accuracy of 0.55 ie. 55% with 95% CI : (0.4161, 0.6788)`, while the decision tree model achieved an `accuracy of 0.48 i.e 48% with 95% CI : (0.3523, 0.6161)` on the test dataset. 
+
+The specificity and sensitivity for the logistic regression model were 0.46 and 0.62, respectively, while for the decision tree model, they were 0.57 and 0.40, respectively.
+
+Thus oberving the accuracy and other metrics, we can conclude that the logistic regression model performed better than the decision tree model in this case.
+
+# Q.N 9
+Do the following using  inbuilt USArrests dataset:
+# a. Create a criminality scale of four variables using PCA
+```{r question9}
+data("USArrests")
+print(head(USArrests))
+# Scale the data
+scaled_data <- scale(USArrests)
+# Perform PCA
+pca_result <- prcomp(scaled_data, center = TRUE, scale. = TRUE)
+print(summary(pca_result))
+# biplot of PCA
+biplot(pca_result, main = "PCA Biplot of USArrests Data")
+
+```
+## Interpretation , from the result we can see PC1 has higher Standard deviation(SD) square of which give eigen value > 1 . and the variance explainded is 62%. So, we can take it but needs confirmation with other test.
+
+# b. Check the eigen value and interpret using kaiser criterion
+```{r question9b}s
+eigen_values <- pca_result$sdev^2
+print(eigen_values)
+
+```
+## Interpretation
+The first component has eigen value (2.48) which is greater than 1, indicating that it explains more variance than a single original variable. According to the Kaiser criterion, we can retain this component for further analysis.
+
+# c. Check the scree plot and interpret
+``` {r}
+library(ggplot2)
+eigen_values <- pca_result$sdev^2
+explained_var <- eigen_values / sum(eigen_values) * 100
+components <- 1:length(eigen_values)
+
+scree_data <- data.frame(
+  PC = components,
+  Variance = explained_var
+)
+
+ggplot(scree_data, aes(x = PC, y = Variance)) +
+  geom_point(color = "blue", size = 3) +
+  geom_line(color = "blue", linewidth = 1) +
+  geom_vline(xintercept = which.max(diff(diff(explained_var)) < 0)[1] + 1,
+             linetype = "dashed", color = "red") +
+  labs(
+    title = "Scree Plot of PCA on USArrests Data",
+    x = "Principal Component",
+    y = "Percentage of Variance Explained"
+  ) +
+  theme_minimal()
+
+
+
+```
+
+## Interpretation
+From the scree plot we can take 2 components as there is sharp bend at 2.
+
+
+#d. Revise the criminality scale usign VARIMAX rotation and interpret
+```{r question9d}
+library(psych)
+# Perform PCA with VARIMAX rotation
+pca_varimax <- principal(scaled_data, nfactors = 2, rotate = "varimax")
+print(pca_varimax)
+
+```
+## Interpretation
+Factor 1 loads highly on Murder and Assault, represents Violent Crime.
+
+Factor 2 loads on UrbanPop and Rape, represents Urban-Related Crime or Sexual/Population-linked Crime.
+
+The VARIMAX rotation helped in clearly separating Murder/Assault from UrbanPop/Rape, making the latent criminality scales more interpretable.
+
+# Q.N 10
+
+  # a. Create a data set with 200 random cases and 5 random variabless  with 39 as seed
+
+```{r question10}
+set.seed(39)
+
+# Generate dataset: 200 rows and 5 columns of random numbers
+random_data <- as.data.frame(matrix(rnorm(200 * 5), nrow = 200, ncol = 5))
+
+# Optionally, name the variables
+colnames(random_data) <- paste0("Var", 1:5)
+
+# View the first few rows
+head(random_data)
+
+```
+# b. Fit hca with single linkage
+```{r}
+dist_matrix <- dist(random_data)
+
+# Single linkage
+hc_single <- hclust(dist_matrix, method = "single")
+# plot
+plot(
+  hc_single,
+  labels=rownames(random_data),
+  ylab="Distance"
+)
+
+```
+ 
+# c. Fit hca with complete
+
+```{r}
+# Complete linkage
+hc_complete <- hclust(dist_matrix, method = "complete")
+
+plot(
+  hc_complete,
+  labels=rownames(random_data),
+  ylab="Distance"
+)
+```
+
+# d. Fit hca with average
+
+```{r}
+
+# Average linkage
+hc_average <- hclust(dist_matrix, method = "average")
+
+plot(
+  hc_average,
+  labels=rownames(random_data),
+  ylab="Distance"
+)
+
+```
+# d. Find best method
+
+```{r}
+# Compute cophenetic distance matrices
+cor_single <- cor(cophenetic(hc_single), dist_matrix)
+cor_complete <- cor(cophenetic(hc_complete), dist_matrix)
+cor_average <- cor(cophenetic(hc_average), dist_matrix)
+
+# Display correlation coefficients
+print(c(Single = cor_single, Complete = cor_complete, Average = cor_average))
+
+```
+# Interpretation
+
+So we can see from the dendogram the best number of clusters can be 4, as the distance between the clusters is highest at that point as seen in the plot for complete.
