@@ -1,0 +1,388 @@
+---
+title: "8116038_Question no 6-10"
+author: "8116038"
+date: "2082-03-16"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Q.N. 6 OR
+## Using airquality dataset with R do:
+## 6a. Replace missing values of "Ozone" variable with its median and save it as corrected Ozone
+```{r question6a}
+# check working directory
+# getwd()
+data(airquality)
+# check the structure of the dataset
+str(airquality)
+# replace missing values of "Ozone" variable with its median
+airquality$Ozone[is.na(airquality$Ozone)] <- median(airquality$Ozone, na.rm = TRUE)
+# save the corrected Ozone variable
+corrected_Ozone <- airquality$Ozone
+# check the first few rows of the dataset
+head(airquality)
+# check the structure of the corrected Ozone variable
+str(corrected_Ozone)
+```
+
+## 6b. Get the histogram of the corrected Ozone variable usign base R plot and interpret it carefully
+```{r 6b}
+# histogram of the corrected Ozone variable using base R plot
+hist(corrected_Ozone, 
+     main = "Histogram of Corrected Ozone", 
+     xlab = "Ozone Levels", 
+     ylab = "Frequency", 
+     col = "lightblue", 
+     border = "black")
+```
+
+### The histogram shows the distribution of the corrected Ozone levels.
+### It appears to be left-skewed, indicating that there are more lower Ozone levels than higher ones.
+### The peak of the histogram is around the lower Ozone levels, with a gradual decrease in frequency as Ozone levels increase.
+
+## 6c. Get the boxplot of the corrected Ozone variable using base R plot and interpret it carefully
+```{r 6c}
+# boxplot of the corrected Ozone variable using base R plot
+boxplot(corrected_Ozone, 
+        main = "Boxplot of Corrected Ozone", 
+        ylab = "Ozone Levels", 
+        col = "lightgreen")
+
+```
+
+### The boxplot shows the distribution of the corrected Ozone levels.
+### The boxplot indicates that the median Ozone level is around 40, with a range from 0 to 150.
+### There are many outliers present, which are represented by the points outside the whiskers of the boxplot.
+
+## 6d. Get the summary of the corrected Ozone variable with justufication
+```{r 6d}
+# summary of the corrected Ozone variable
+
+summary(corrected_Ozone)
+```
+
+## Interpertation
+### The summary of the corrected Ozone variable shows the following statistics:
+### - Minimum: 1.0
+### - 1st Quartile: 21.0
+### - Median: 31.5
+### - Mean: 39.56
+### - 3rd Quartile: 46
+### - Maximum: 168
+### The mean Ozone level is 39.56, which is higher than the median of 31.5, indicating a right-skewed distribution.
+
+# Q.N. 7 OR
+## Do the following using mtcars data set with R
+## 7a.Get the bar plot of the mpg vaiable using ggplot2 and interpret carefully
+
+```{r 7a}
+library(ggplot2)
+data(mtcars)
+
+ggplot(mtcars, aes(x = factor(rownames(mtcars)), y = mpg)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(x = "Car Model", y = "Miles Per Gallon (mpg)", title = "Bar Plot of mpg for Each Car") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+### Interpretation
+This bar plot shows the miles per gallon (mpg) for each individual car model in the dataset.
+
+Since mpg is a continuous variable, bar plots are not the most common method of representation — they are better for categorical variables.
+
+## 7b. Get the box plot for mpg and interepret
+```{r 7b}
+ggplot(mtcars, aes(y = mpg)) +
+  geom_boxplot(fill = "orange") +
+  labs(y = "Miles Per Gallon (mpg)", title = "Box Plot of mpg")
+```
+
+The boxplot shows the median, interquartile range (IQR), and potential outliers for mpg.
+
+Median mpg is at 19),
+We see that most cars have mpg between ~15 and 22, with some outliers (very high mpg cars).
+
+## 7c. Get the scatter plot
+```{r question7c}
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point(color = "darkgreen", size = 3) +
+  geom_smooth(method = "lm", se = TRUE, color = "blue") +
+  labs(x = "Weight (1000 lbs)", y = "Miles Per Gallon (mpg)", title = "Scatterplot of mpg vs wt")
+
+```
+This scatterplot shows the relationship between car weight (wt) and fuel efficiency (mpg).
+
+There's a clear negative correlation: as weight increases, mpg decreases.
+
+Heavier cars tend to consume more fuel (lower mpg).
+
+The line of best fit (regression line) confirms this negative trend.
+
+## 7d. Get appropriate correlation coefficient
+
+```{r 7d}
+cor(mtcars$mpg, mtcars$wt)
+
+```
+
+Output: -0.8676
+
+This is a strong negative correlation.
+
+It quantifies the strength and direction of the relationship observed in the scatterplot.
+
+It means that as the weight of a car increases, its mpg decreases significantly.
+
+# Q.N. 8
+## a. Perform shapiro-wilk test on wind variable and test normality
+```{r question8a}
+data(airquality)
+head(airquality)
+
+shapiro.test(airquality$Wind)
+```
+
+The Shapiro-Wilk test checks whether the Wind variable follows a normal distribution.
+We get p-value = 0.1178,
+
+Since p-value > 0.05, we fa null hypothesis
+
+Since p-value > 0.05, we fail to reject H0 i.e wind is approximately normal.
+
+## 8b. Perform bartlett test 
+```{r 8b}
+bartlett.test(Wind ~ factor(Month), data = airquality)
+```
+
+## Bartlett’s K-squared = 1.6178, df = 4, p-value = 0.8056
+
+Bartlett's test is used to test equality of variances across groups.
+
+Since p-value > 0.05, we assume homogeneity of variance.
+
+The p-value(0.8056) is greater than 0.05, we conclude that Wind variance is equal across months — assumption for ANOVA is satisfied.
+
+## 8c. Fit 1-way ANOVA
+
+```{r 8c}
+anova_result <- aov(Wind ~ factor(Month), data = airquality)
+summary(anova_result)
+
+```
+
+We get p-value = 0.00879.
+
+One-way ANOVA tests whether mean wind speed is significantly different between months.
+
+
+Since p-value < 0.05, we reject H0 i.e at least one month differs significantly.
+i.e there is a significant difference in average Wind speeds between months.
+
+## 8d. Fit TukeyHSD with 95% CI
+```{r 8d}
+TukeyHSD(anova_result, conf.level = 0.95)
+
+```
+
+Tukey's HSD test compares all pairs of months to see which ones differ significantly.
+
+<!-- Look at: -->
+
+p adj (adjusted p-value) for 7-5 and 8-5 is < 0.05, ie the that pair for months from 7-5 and 8-5 is significantly different.
+
+On the table we see for 7-5 comparison shows p adj = 0.019
+i.e Mean Wind in May is significantly different from July.
+
+Similarly,
+On the table we see for 8-5 comparison shows p adj = 0.011
+i.e Mean Wind in May is significantly different from August
+
+# Q.N. 9
+## 9a. Divide mtcars data into train and test data with 70:30
+```{r}
+set.seed(39)
+data <- mtcars
+sample_size <- floor(0.7 * nrow(data))
+train_index <- sample(seq_len(nrow(data)), size = sample_size)
+
+train_data <- data[train_index, ]
+test_data <- data[-train_index, ]
+
+print(train_data)
+print(test_data)
+
+```
+
+## 9b. Fit linear regression and KNN
+```{r 9b}
+# Linear regression
+lm_model <- lm(mpg ~ ., data = train_data)
+
+# KNN
+library(caret)
+library(dplyr)
+
+# Preprocessing: scale and center
+pre_proc <- preProcess(train_data, method = c("center", "scale"))
+train_scaled <- predict(pre_proc, train_data)
+test_scaled <- predict(pre_proc, test_data)
+
+# KNN Regression
+set.seed(39)
+knn_model <- train(mpg ~ ., data = train_scaled, method = "knn", tuneLength = 5)
+
+```
+
+## 9c. Predict value for wt = 6000lbs
+```{r question9}
+# Predict with linear regression
+lm_pred <- predict(lm_model, newdata = test_data)
+
+# Predict with KNN
+knn_pred <- predict(knn_model, newdata = test_scaled)
+
+# Create a new data point
+new_data <- data.frame(t(colMeans(data)))
+new_data$wt <- 6  # set weight to 6000 lbs
+
+# For linear regression
+lm_wt6_pred <- predict(lm_model, newdata = new_data)
+
+# For KNN: preprocess new data
+new_data_scaled <- predict(pre_proc, new_data)
+knn_wt6_pred <- predict(knn_model, newdata = new_data_scaled)
+
+# Print predictions
+lm_wt6_pred
+knn_wt6_pred
+
+```
+
+Using linear model the predicted value is 5.009 which seems to be correct, on the other hand with knn it is -0.76 which do not seem to be correct.
+
+## 9d. Compare the fit indices 
+
+```{r 9d}
+# Actual values
+actual <- test_data$mpg
+
+# Metrics function
+get_metrics <- function(actual, predicted) {
+  mse <- mean((actual - predicted)^2)
+  rmse <- sqrt(mse)
+  rss <- sum((actual - predicted)^2)
+  tss <- sum((actual - mean(actual))^2)
+  rsq <- 1 - rss/tss
+  return(c(R2 = rsq, MSE = mse, RMSE = rmse))
+}
+
+# Linear Regression metrics
+lm_metrics <- get_metrics(actual, lm_pred)
+
+# KNN metrics
+knn_metrics <- get_metrics(actual, knn_pred)
+
+# Combine results
+metrics_df <- data.frame(
+  Model = c("Linear Regression", "KNN"),
+  R_Squared = c(lm_metrics["R2"], knn_metrics["R2"]),
+  MSE = c(lm_metrics["MSE"], knn_metrics["MSE"]),
+  RMSE = c(lm_metrics["RMSE"], knn_metrics["RMSE"])
+)
+
+print(metrics_df)
+
+```
+
+Best model is Linear regression because;
+
+### R-squared:
+
+Linear Regression: -0.043
+
+KNN: -17.675 ; much worse
+
+Though both are negative (which is bad), KNN performs very poorly in explaining the variance in mpg.
+
+### MSE & RMSE:
+
+Linear Regression: MSE = 16.74, RMSE = 4.09
+
+KNN: MSE = 299.79, RMSE = 17.31
+
+## Lower values in linear regression indicate much better predictive accuracy.
+
+## NOTE
+A negative R square means the model is performing worse than just predicting the mean.
+
+This implies that both models are not fitting well, possibly due to:
+
+- Small test sample size
+
+- Multicollinearity or irrelevant predictors
+
+- No tuning of KNN (e.g., wrong k)
+
+- Outliers or non-linear relationships
+
+# Q.N. 10
+## 10a. Fit HCA using single linkage
+```{r question10a}
+data("USArrests")
+
+# Remove missing values and scale data
+usarrests_scaled <- scale(USArrests)
+
+# Compute distance matrix
+dist_matrix <- dist(usarrests_scaled)
+
+# Fit hierarchical clustering using single linkage
+hc_single <- hclust(dist_matrix, method = "single")
+
+# Plot dendrogram
+plot(hc_single, main = "Dendrogram - Single Linkage", xlab = "", sub = "", cex = 0.6)
+
+```
+
+## 10b. Fit HCA using complete linkage
+```{r question10b}
+
+hc_complete <- hclust(dist_matrix, method = "complete")
+
+plot(hc_complete, main = "Dendrogram - Complete Linkage", xlab = "", sub = "", cex = 0.6)
+
+```
+
+## 10c. Fit HCA using average linkage
+```{r question10c}
+hc_average <- hclust(dist_matrix, method = "average")
+
+plot(hc_average, main = "Dendrogram - Average Linkage", xlab = "", sub = "", cex = 0.6)
+
+```
+
+## 10d. show number of cluster
+```{r question10d}
+# Plot best model's dendrogram (complete linkage)
+plot(hc_complete, main = "Complete Linkage Dendrogram with Cluster Cut", xlab = "", sub = "", cex = 0.6)
+
+# Add abline to cut the dendrogram (adjust height to choose k)
+abline(h = 4, col = "red", lty = 2)
+
+# Cut tree into clusters,i.e 4 clusters
+clusters <- cutree(hc_complete, k = 4)
+
+# Add cluster labels
+print(clusters)
+
+```
+
+Hence from the graph we can see that cutting at height 4 of the complete linkage forms 4 clusters. So the best model can be  with complete linkage.
+
+
